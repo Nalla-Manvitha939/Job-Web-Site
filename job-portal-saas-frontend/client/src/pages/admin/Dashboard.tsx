@@ -17,8 +17,12 @@ export default function AdminDashboard() {
   const [companies, setCompanies] = useState<any[]>([]);
 
   useEffect(() => {
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://job-web-site-2qhl.onrender.com";
+
     // 1. Fetch registered users live from your FastAPI database backend
-    fetch("http://localhost:8000/users/")
+    fetch(`${API_URL}/users/`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.users)) {
