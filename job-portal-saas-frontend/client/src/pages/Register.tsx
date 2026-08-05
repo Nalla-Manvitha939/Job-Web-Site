@@ -49,8 +49,10 @@ export default function Register() {
     }
 
     try {
+      // Uses VITE_API_URL if defined, otherwise falls back directly to your Render backend
+      const API_URL = import.meta.env.VITE_API_URL || "https://job-web-site-2qhl.onrender.com";
       
-      const response = await fetch("http://127.0.0.1:8000/auth/register", {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
