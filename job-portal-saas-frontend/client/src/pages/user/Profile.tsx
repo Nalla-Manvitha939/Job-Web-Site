@@ -14,19 +14,14 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     userId: 0,
-
     firstName: "",
     lastName: "",
-
     email: "",
     phone: "",
     location: "",
-
     headline: "",
     bio: "",
-
     skills: [] as string[],
-
     experience: [] as {
       id: number;
       title: string;
@@ -34,7 +29,6 @@ export default function Profile() {
       duration: string;
       description: string;
     }[],
-
     education: [] as {
       id: number;
       school: string;
@@ -45,7 +39,6 @@ export default function Profile() {
     profileImage: "", 
   });
 
-  
   const [profileImage, setProfileImage] = useState("");
 
   useEffect(() => {
@@ -64,7 +57,6 @@ export default function Profile() {
         Number(profile.userId) === Number(currentUser.id)
     );
 
-    
     if (existingProfile) {
       setProfileData(existingProfile);
       setProfileImage(existingProfile.profileImage || "");
@@ -73,21 +65,15 @@ export default function Profile() {
 
       setProfileData({
         userId: currentUser.id,
-
         firstName: name[0] || "",
         lastName: name.slice(1).join(" ") || "",
-
         email: currentUser.email || "",
         phone: currentUser.mobile || "",
         location: "",
-
         headline: "",
         bio: "",
-
         skills: [],
-
         experience: [],
-
         education: [],
         resumeName: "",
         profileImage: "",
@@ -98,8 +84,8 @@ export default function Profile() {
   const [newSkill, setNewSkill] = useState("");
   const [showSkillInput, setShowSkillInput] = useState(false);
   const [showExperienceForm, setShowExperienceForm] = useState(false);
-
   const [showEducationForm, setShowEducationForm] = useState(false);
+  
   const [newEducation, setNewEducation] = useState({
     school: "",
     degree: "",
@@ -130,7 +116,6 @@ export default function Profile() {
         Number(p.userId) === Number(profileData.userId)
     );
 
-    
     const updatedProfile = {
       ...profileData,
       resumeName: resumeFile?.name || profileData.resumeName,
@@ -149,13 +134,11 @@ export default function Profile() {
     );
 
     setIsEditing(false);
-
     alert("Profile saved successfully.");
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {}
       <div className="sticky top-0 z-40 border-b border-blue-200 bg-white/95 backdrop-blur shadow-sm">
         <div className="container py-4">
           <button
@@ -180,14 +163,10 @@ export default function Profile() {
         </div>
       </div>
 
-      
       <div className="container py-8">
         <div className="max-w-4xl mx-auto space-y-8">
-          
           <Card className="rounded-2xl border border-blue-200 bg-white p-6 shadow-md">
             <div className="flex items-start gap-6 mb-6">
-              
-              
               <div className="flex flex-col items-center">
                 <div className="relative">
                   {profileImage ? (
@@ -283,7 +262,6 @@ export default function Profile() {
                         onChange={handleChange}
                         rows={3}
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
-                        
                       />
                     </div>
                   </div>
@@ -297,7 +275,6 @@ export default function Profile() {
               </div>
             </div>
 
-            
             {isEditing ? (
               <div className="grid md:grid-cols-2 gap-4 pt-6 border-t border-border">
                 <div>
@@ -351,7 +328,10 @@ export default function Profile() {
 
             {isEditing && (
               <div className="flex gap-3 pt-6 border-t border-border">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                <Button 
+                  onClick={handleSave}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                >
                   Save Changes
                 </Button>
                 <Button
@@ -365,7 +345,6 @@ export default function Profile() {
             )}
           </Card>
 
-          
           <Tabs defaultValue="skills" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="skills">Skills</TabsTrigger>
@@ -373,7 +352,6 @@ export default function Profile() {
               <TabsTrigger value="education">Education</TabsTrigger>
             </TabsList>
 
-            
             <TabsContent value="skills">
               <Card className="glass-card p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -397,16 +375,13 @@ export default function Profile() {
                       onChange={(e) => setNewSkill(e.target.value)}
                       className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                     />
-
                     <Button
                       onClick={() => {
                         if (!newSkill.trim()) return;
-
                         setProfileData((prev) => ({
                           ...prev,
                           skills: [...prev.skills, newSkill],
                         }));
-
                         setNewSkill("");
                         setShowSkillInput(false);
                       }}
@@ -423,7 +398,6 @@ export default function Profile() {
                       className="px-3 py-1 flex items-center gap-2"
                     >
                       {skill}
-
                       {isEditing && (
                         <Trash2
                           className="w-3 h-3 cursor-pointer"
@@ -441,7 +415,6 @@ export default function Profile() {
               </Card>
             </TabsContent>
 
-            
             <TabsContent value="experience">
               <Card className="glass-card p-6 space-y-4">
                 <div className="flex items-center justify-between mb-4">
@@ -471,7 +444,6 @@ export default function Profile() {
                         }
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
-
                       <Input
                         placeholder="Company"
                         value={newExperience.company}
@@ -483,7 +455,6 @@ export default function Profile() {
                         }
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
-
                       <Input
                         placeholder="Duration"
                         value={newExperience.duration}
@@ -495,7 +466,6 @@ export default function Profile() {
                         }
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
-
                       <Textarea
                         placeholder="Description"
                         value={newExperience.description}
@@ -507,15 +477,9 @@ export default function Profile() {
                         }
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
-
                       <Button
                         onClick={() => {
-                          if (
-                            !newExperience.title ||
-                            !newExperience.company
-                          )
-                            return;
-
+                          if (!newExperience.title || !newExperience.company) return;
                           setProfileData((prev) => ({
                             ...prev,
                             experience: [
@@ -526,14 +490,12 @@ export default function Profile() {
                               },
                             ],
                           }));
-
                           setNewExperience({
                             title: "",
                             company: "",
                             duration: "",
                             description: "",
                           });
-
                           setShowExperienceForm(false);
                         }}
                       >
@@ -549,7 +511,17 @@ export default function Profile() {
                         <p className="font-bold">{exp.title}</p>
                         <p className="text-sm text-muted-foreground">{exp.company}</p>
                       </div>
-                      {isEditing && <Trash2 className="w-4 h-4 text-muted-foreground cursor-pointer" />}
+                      {isEditing && (
+                        <Trash2 
+                          className="w-4 h-4 text-muted-foreground cursor-pointer" 
+                          onClick={() =>
+                            setProfileData((prev) => ({
+                              ...prev,
+                              experience: prev.experience.filter((item) => item.id !== exp.id),
+                            }))
+                          }
+                        />
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">{exp.duration}</p>
                     <p className="text-sm text-muted-foreground">{exp.description}</p>
@@ -558,7 +530,6 @@ export default function Profile() {
               </Card>
             </TabsContent>
 
-            
             <TabsContent value="education">
               <Card className="glass-card p-6 space-y-4">
                 <div className="flex items-center justify-between mb-4">
@@ -589,7 +560,6 @@ export default function Profile() {
                         }
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
-
                       <Input
                         placeholder="Degree"
                         value={newEducation.degree}
@@ -601,7 +571,6 @@ export default function Profile() {
                         }
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
-
                       <Input
                         placeholder="Year"
                         value={newEducation.year}
@@ -613,13 +582,9 @@ export default function Profile() {
                         }
                         className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
-                      
-
                       <Button
                         onClick={() => {
-                          if (!newEducation.school || !newEducation.degree)
-                            return;
-
+                          if (!newEducation.school || !newEducation.degree) return;
                           setProfileData((prev) => ({
                             ...prev,
                             education: [
@@ -630,13 +595,11 @@ export default function Profile() {
                               },
                             ],
                           }));
-
                           setNewEducation({
                             school: "",
                             degree: "",
                             year: "",
                           });
-
                           setShowEducationForm(false);
                         }}
                       >
@@ -674,21 +637,16 @@ export default function Profile() {
             </TabsContent>
           </Tabs>
 
-          
           <Card className="glass-card p-6">
             <h3 className="text-lg font-bold mb-4">Resume</h3>
-
             <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
               <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-4" />
-
               <p className="font-medium mb-2">
                 {profileData.resumeName || "Upload your resume"}
               </p>
-
               <p className="text-sm text-muted-foreground mb-4">
                 PDF, DOC or DOCX (Max 5MB)
               </p>
-
               {isEditing && (
                 <>
                   <input
@@ -706,17 +664,16 @@ export default function Profile() {
                       }
 
                       setResumeFile(file);
-
                       setProfileData((prev) => ({
                         ...prev,
                         resumeName: file.name,
                       }));
                     }}
                   />
-
                   <Button 
                     asChild
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  >
                      <label htmlFor="resume-upload" className="cursor-pointer flex items-center gap-2">
                        <Upload className="w-4 h-4" />
                        Choose Resume
