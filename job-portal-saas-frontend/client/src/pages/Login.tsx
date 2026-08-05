@@ -18,7 +18,10 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://job-web-site-2qhl.onrender.com";
+
     if (
       email.trim().toLowerCase() === "recruiter@jobportal.com" &&
       password === "recruiter@123"
@@ -37,7 +40,6 @@ export default function Login() {
       return;
     }
 
-    
     if (
       email.trim().toLowerCase() === "admin@jobportal.com" &&
       password === "admin@123"
@@ -56,9 +58,8 @@ export default function Login() {
       return;
     }
 
-    
     try {
-      const response = await fetch("http://localhost:8000/auth/login", {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +77,6 @@ export default function Login() {
         return;
       }
 
-      
       const user = data.user || data;
       localStorage.setItem("currentUser", JSON.stringify(user));
       if (data.access_token) {
@@ -104,8 +104,12 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async (credential: string) => {
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://job-web-site-2qhl.onrender.com";
+
     try {
-      const response = await fetch("http://localhost:8000/auth/google", {
+      const response = await fetch(`${API_URL}/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +151,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      
       <div className="border-b border-border">
         <div className="container py-4">
           <button
@@ -160,7 +163,6 @@ export default function Login() {
         </div>
       </div>
 
-      
       <div className="flex-1 flex items-center justify-center py-12">
         <div className="w-full max-w-md px-4">
           <Card className="glass-card p-8 space-y-6">
