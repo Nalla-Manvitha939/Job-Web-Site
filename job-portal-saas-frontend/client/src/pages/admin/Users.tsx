@@ -36,7 +36,11 @@ export default function UsersPage() {
 
   // Load users live from FastAPI backend
   const loadUsers = () => {
-    fetch("http://localhost:8000/users/")
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://job-web-site-2qhl.onrender.com";
+
+    fetch(`${API_URL}/users/`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.users)) {
@@ -90,11 +94,15 @@ export default function UsersPage() {
     });
   }, [search, roleFilter, users]);
 
-  // Handle user deletion (can also connect to backend DELETE route if available)
+  // Handle user deletion
   const handleDeleteUser = (userId: number | string) => {
     if (!confirm("Delete this user?")) return;
 
-    fetch(`http://localhost:8000/users/${userId}`, {
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://job-web-site-2qhl.onrender.com";
+
+    fetch(`${API_URL}/users/${userId}`, {
       method: "DELETE",
     })
       .then(() => {
@@ -102,7 +110,6 @@ export default function UsersPage() {
         window.dispatchEvent(new Event("usersUpdated"));
       })
       .catch((err) => {
-        // Fallback local UI update if backend delete route isn't configured yet
         setUsers((prev) => prev.filter((u) => u.id !== userId));
         console.error("Error deleting user from backend:", err);
       });
