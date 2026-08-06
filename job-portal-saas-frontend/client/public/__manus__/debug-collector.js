@@ -12,16 +12,13 @@
 (function () {
   "use strict";
 
-  
   if (window.__MANUS_DEBUG_COLLECTOR__) return;
 
-  
   const CONFIG = {
     reportEndpoint: "/__manus__/logs",
     bufferSize: {
       console: 500,
       network: 200,
-      
       ui: 500,
     },
     reportInterval: 2000,
@@ -35,14 +32,11 @@
       "session",
     ],
     maxBodyLength: 10240,
-    
     uiInputMaxLen: 200,
     uiTextMaxLen: 80,
-    
     scrollThrottleMs: 500,
   };
 
-  
   const store = {
     consoleLogs: [],
     networkRequests: [],
@@ -50,8 +44,6 @@
     lastReportTime: Date.now(),
     lastScrollTime: 0,
   };
-
-  
 
   function sanitizeValue(value, depth) {
     if (depth === void 0) depth = 0;
@@ -117,8 +109,6 @@
       return str;
     }
   }
-
-  
 
   function shouldIgnoreTarget(target) {
     try {
@@ -239,7 +229,6 @@
   }
 
   function installUiEventListeners() {
-    
     document.addEventListener(
       "click",
       function (e) {
@@ -254,7 +243,6 @@
       true
     );
 
-    
     document.addEventListener(
       "change",
       function (e) {
@@ -291,7 +279,6 @@
       true
     );
 
-    
     document.addEventListener(
       "keydown",
       function (e) {
@@ -303,7 +290,6 @@
       true
     );
 
-    
     document.addEventListener(
       "submit",
       function (e) {
@@ -314,7 +300,6 @@
       true
     );
 
-    
     window.addEventListener(
       "scroll",
       function () {
@@ -332,7 +317,6 @@
       { passive: true }
     );
 
-    
     function nav(reason) {
       logUiEvent("navigate", { reason: reason });
     }
@@ -356,8 +340,6 @@
       nav("hashchange");
     });
   }
-
-  
 
   var originalConsole = {
     log: console.log.bind(console),
@@ -403,7 +385,6 @@
     });
     pruneBuffer(store.consoleLogs, CONFIG.bufferSize.console);
 
-    
     logUiEvent("error", {
       message: event.message,
       filename: event.filename,
@@ -433,8 +414,6 @@
     });
   });
 
-  
-
   var originalFetch = window.fetch.bind(window);
 
   window.fetch = function (input, init) {
@@ -446,12 +425,10 @@
       : (input && (input.url || input.href || String(input))) || "";
     var method = init.method || (input && input.method) || "GET";
 
-    
     if (url.indexOf("/__manus__/") === 0) {
       return originalFetch(input, init);
     }
 
-    
     var requestHeaders = {};
     try {
       if (init.headers) {
@@ -489,7 +466,6 @@
           body: null,
         };
 
-        
         if (response.status >= 400) {
           logUiEvent("network_error", {
             kind: "fetch",
@@ -500,7 +476,6 @@
           });
         }
 
-        
         var isStreaming = contentType.indexOf("text/event-stream") !== -1 ||
                           contentType.indexOf("application/stream") !== -1 ||
                           contentType.indexOf("application/x-ndjson") !== -1;
@@ -511,7 +486,6 @@
           return response;
         }
 
-        
         if (contentLength && parseInt(contentLength, 10) > CONFIG.maxBodyLength) {
           entry.response.body = "[Response too large: " + contentLength + " bytes]";
           store.networkRequests.push(entry);
@@ -519,7 +493,6 @@
           return response;
         }
 
-        
         var isBinary = contentType.indexOf("image/") !== -1 ||
                        contentType.indexOf("video/") !== -1 ||
                        contentType.indexOf("audio/") !== -1 ||
@@ -533,10 +506,8 @@
           return response;
         }
 
-        
         var clonedResponse = response.clone();
 
-        
         clonedResponse
           .text()
           .then(function (text) {
@@ -554,7 +525,6 @@
             pruneBuffer(store.networkRequests, CONFIG.bufferSize.network);
           });
 
-        
         return response;
       })
       .catch(function (error) {
@@ -574,8 +544,6 @@
         throw error;
       });
   };
-
-  
 
   var originalXHROpen = XMLHttpRequest.prototype.open;
   var originalXHRSend = XMLHttpRequest.prototype.send;
@@ -604,12 +572,10 @@
         var contentType = (xhr.getResponseHeader("content-type") || "").toLowerCase();
         var responseBody = null;
 
-        
         var isStreaming = contentType.indexOf("text/event-stream") !== -1 ||
                           contentType.indexOf("application/stream") !== -1 ||
                           contentType.indexOf("application/x-ndjson") !== -1;
 
-        
         var isBinary = contentType.indexOf("image/") !== -1 ||
                        contentType.indexOf("video/") !== -1 ||
                        contentType.indexOf("audio/") !== -1 ||
@@ -622,7 +588,6 @@
         } else if (isBinary) {
           responseBody = "[Binary content: " + contentType + "]";
         } else {
-          
           try {
             var text = xhr.responseText || "";
             if (text.length > CONFIG.maxBodyLength) {
@@ -631,7 +596,6 @@
               responseBody = sanitizeValue(tryParseJson(text));
             }
           } catch (e) {
-            
             responseBody = "[Unable to read response: " + e.message + "]";
           }
         }
@@ -692,14 +656,11 @@
     return originalXHRSend.apply(this, arguments);
   };
 
-  
-
   function reportLogs() {
     var consoleLogs = store.consoleLogs.splice(0);
     var networkRequests = store.networkRequests.splice(0);
     var uiEvents = store.uiEvents.splice(0);
 
-    
     if (
       consoleLogs.length === 0 &&
       networkRequests.length === 0 &&
@@ -712,9 +673,7 @@
       timestamp: Date.now(),
       consoleLogs: consoleLogs,
       networkRequests: networkRequests,
-      
       sessionEvents: uiEvents,
-      
       uiEvents: uiEvents,
     };
 
@@ -723,7 +682,6 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     }).catch(function () {
-      
       store.consoleLogs = consoleLogs.concat(store.consoleLogs);
       store.networkRequests = networkRequests.concat(store.networkRequests);
       store.uiEvents = uiEvents.concat(store.uiEvents);
@@ -734,11 +692,9 @@
     });
   }
 
-  
   setInterval(reportLogs, CONFIG.reportInterval);
 
-  
-  // Updated from 'beforeunload' to 'pagehide' to avoid deprecation warnings
+  // Replaced deprecated 'beforeunload' with modern 'pagehide'
   window.addEventListener("pagehide", function () {
     var consoleLogs = store.consoleLogs;
     var networkRequests = store.networkRequests;
@@ -756,17 +712,14 @@
       timestamp: Date.now(),
       consoleLogs: consoleLogs,
       networkRequests: networkRequests,
-      
       sessionEvents: uiEvents,
       uiEvents: uiEvents,
     };
 
     if (navigator.sendBeacon) {
       var payloadStr = JSON.stringify(payload);
-      
-      var MAX_BEACON_SIZE = 60000; 
+      var MAX_BEACON_SIZE = 60000;
       if (payloadStr.length > MAX_BEACON_SIZE) {
-        
         var truncatedPayload = {
           timestamp: Date.now(),
           consoleLogs: consoleLogs.slice(-50),
@@ -781,14 +734,12 @@
     }
   });
 
-  
   try {
     installUiEventListeners();
   } catch (e) {
     console.warn("[Manus] Failed to install UI listeners:", e);
   }
 
-  
   window.__MANUS_DEBUG_COLLECTOR__ = {
     version: "2.0-no-rrweb",
     store: store,
