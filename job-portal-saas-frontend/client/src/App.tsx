@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch } from "wouter";
+import { lazy, Suspense } from "react";
 
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -8,48 +9,42 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import NotFound from "./pages/NotFound";
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
+const UserDashboard = lazy(() => import("./pages/user/Dashboard"));
+const BrowseJobs = lazy(() => import("./pages/user/BrowseJobs"));
+const JobDetails = lazy(() => import("./pages/user/JobDetails"));
+const ApplyJob = lazy(() => import("./pages/user/ApplyJob"));
+const MyApplications = lazy(() => import("./pages/user/MyApplications"));
+const UserProfile = lazy(() => import("./pages/user/Profile"));
+const SavedJobs = lazy(() => import("./pages/user/SavedJobs"));
 
-import UserDashboard from "./pages/user/Dashboard";
-import BrowseJobs from "./pages/user/BrowseJobs";
-import JobDetails from "./pages/user/JobDetails";
-import ApplyJob from "./pages/user/ApplyJob";
-import MyApplications from "./pages/user/MyApplications";
-import UserProfile from "./pages/user/Profile";
-import SavedJobs from "./pages/user/SavedJobs"; // <-- Added SavedJobs import
+const RecruiterDashboard = lazy(() => import("./pages/recruiter/Dashboard"));
+const CompanyProfile = lazy(() => import("./pages/recruiter/CompanyProfile"));
+const PostJob = lazy(() => import("./pages/recruiter/PostJob"));
+const ManageJobs = lazy(() => import("./pages/recruiter/ManageJobs"));
+const EditJob = lazy(() => import("./pages/recruiter/EditJob"));
+const Applicants = lazy(() => import("./pages/recruiter/Applicants"));
+const RecruiterJobDetails = lazy(() => import("./pages/recruiter/JobDetails"));
 
-
-import RecruiterDashboard from "./pages/recruiter/Dashboard";
-import CompanyProfile from "./pages/recruiter/CompanyProfile";
-import PostJob from "./pages/recruiter/PostJob";
-import ManageJobs from "./pages/recruiter/ManageJobs";
-import EditJob from "./pages/recruiter/EditJob";
-import Applicants from "./pages/recruiter/Applicants";
-import RecruiterJobDetails from "./pages/recruiter/JobDetails"; 
-
-
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdminUsers from "./pages/admin/Users";
-import AdminCompanies from "./pages/admin/Companies";
-import AdminJobs from "./pages/admin/Jobs";
-import AdminApplicants from "./pages/admin/Applicants";
-import AdminReports from "./pages/admin/Reports";
-import AdminAnalytics from "./pages/admin/Analytics";
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
+const AdminCompanies = lazy(() => import("./pages/admin/Companies"));
+const AdminJobs = lazy(() => import("./pages/admin/Jobs"));
+const AdminApplicants = lazy(() => import("./pages/admin/Applicants"));
+const AdminReports = lazy(() => import("./pages/admin/Reports"));
+const AdminAnalytics = lazy(() => import("./pages/admin/Analytics"));
 
 function Router() {
   return (
     <main>
       <Switch>
-        
         <Route path="/" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
-
-        
 
         <Route path="/user/dashboard">
           <ProtectedRoute allowedRoles={["user"]}>
@@ -93,8 +88,6 @@ function Router() {
           </ProtectedRoute>
         </Route>
 
-        
-
         <Route path="/recruiter/dashboard">
           <ProtectedRoute allowedRoles={["recruiter"]}>
             <RecruiterDashboard />
@@ -136,8 +129,6 @@ function Router() {
             <Applicants />
           </ProtectedRoute>
         </Route>
-
-        
 
         <Route path="/admin/dashboard">
           <ProtectedRoute allowedRoles={["admin"]}>
@@ -181,7 +172,6 @@ function Router() {
           </ProtectedRoute>
         </Route>
 
-        
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
@@ -196,7 +186,15 @@ function App() {
         <ThemeProvider defaultTheme="light" switchable>
           <TooltipProvider>
             <Toaster />
-            <Router />
+            <Suspense
+              fallback={
+                <div className="min-h-screen flex items-center justify-center">
+                  Loading...
+                </div>
+              }
+            >
+              <Router />
+            </Suspense>
           </TooltipProvider>
         </ThemeProvider>
       </AuthProvider>
