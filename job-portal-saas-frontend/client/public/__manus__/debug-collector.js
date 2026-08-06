@@ -694,7 +694,7 @@
 
   setInterval(reportLogs, CONFIG.reportInterval);
 
-  // Replaced deprecated 'beforeunload' with modern 'pagehide'
+  // Modern pagehide event listener used instead of deprecated unload/beforeunload
   window.addEventListener("pagehide", function () {
     var consoleLogs = store.consoleLogs;
     var networkRequests = store.networkRequests;
