@@ -738,7 +738,8 @@
   setInterval(reportLogs, CONFIG.reportInterval);
 
   
-  window.addEventListener("beforeunload", function () {
+  // Updated from 'beforeunload' to 'pagehide' to avoid deprecation warnings
+  window.addEventListener("pagehide", function () {
     var consoleLogs = store.consoleLogs;
     var networkRequests = store.networkRequests;
     var uiEvents = store.uiEvents;
