@@ -12,15 +12,19 @@ import {
   Trash2,
   CheckCircle,
   XCircle,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function JobsPage() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const [jobs, setJobs] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
@@ -62,7 +66,7 @@ export default function JobsPage() {
   }, [jobs, search, statusFilter]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
         <div className="container py-4 flex items-center justify-between">
@@ -82,6 +86,19 @@ export default function JobsPage() {
               </p>
             </div>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
@@ -131,7 +148,7 @@ export default function JobsPage() {
             </div>
 
             <select
-              className="border rounded-lg px-4 py-2 bg-background"
+              className="border rounded-lg px-4 py-2 bg-background text-foreground"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
