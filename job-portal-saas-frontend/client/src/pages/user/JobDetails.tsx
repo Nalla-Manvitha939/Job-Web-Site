@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Share2, Bookmark, BookmarkCheck } from "lucide-react";
 import { useLocation, useRoute } from "wouter";
 import { useEffect, useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface Job {
   id: number;
@@ -35,57 +36,51 @@ const RELATED_JOBS = [
 export default function JobDetails() {
   const [, navigate] = useLocation();
 
-const [, params] = useRoute("/user/job/:id");
+  const [, params] = useRoute("/user/job/:id");
 
-const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(false);
 
-const [job, setJob] = useState<Job | null>(null);
-useEffect(() => {
-  const jobs = JSON.parse(
-    localStorage.getItem("jobs") || "[]"
-  );
+  const [job, setJob] = useState<Job | null>(null);
+  useEffect(() => {
+    const jobs = JSON.parse(
+      localStorage.getItem("jobs") || "[]"
+    );
 
-  const selectedJob = jobs.find(
-    (j: Job) => j.id === Number(params?.id)
-  );
+    const selectedJob = jobs.find(
+      (j: Job) => j.id === Number(params?.id)
+    );
 
-  if (selectedJob) {
-    setJob(selectedJob);
+    if (selectedJob) {
+      setJob(selectedJob);
+    }
+  }, [params]);
+  if (!job) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
-}, [params]);
-if (!job) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      Loading...
-    </div>
-  );
-}
-
-
-  
 
   return (
-    <div className="min-h-screen bg-background">
-      
+    <div className="min-h-screen bg-background text-foreground transition-colors">
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
-        <div className="container py-4">
+        <div className="container py-4 flex items-center justify-between">
           <button
             onClick={() => navigate("/user/browse-jobs")}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Browse Jobs
           </button>
+          <ThemeToggle />
         </div>
       </div>
 
-      
       <div className="container py-8">
         <div className="grid lg:grid-cols-3 gap-8">
-          
           <div className="lg:col-span-2 space-y-8">
-            
-            <Card className="glass-card p-8">
+            <Card className="glass-card p-8 bg-card text-card-foreground border-border">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-start gap-4">
                   <div className="w-16 h-16 rounded-lg bg-accent/10 flex items-center justify-center font-bold text-accent text-xl">
@@ -133,20 +128,12 @@ if (!job) {
               </div>
             </Card>
 
-            
-            <Card className="glass-card p-8">
+            <Card className="glass-card p-8 bg-card text-card-foreground border-border">
               <h2 className="text-2xl font-bold mb-4">Job Description</h2>
               <p className="text-muted-foreground mb-6">{job.description}</p>
-
-
-
-              
-
-              
             </Card>
 
-            
-            <Card className="glass-card p-8">
+            <Card className="glass-card p-8 bg-card text-card-foreground border-border">
               <h2 className="text-2xl font-bold mb-4">Required Skills</h2>
               <div className="flex flex-wrap gap-2">
                 {job.skills.map((skill) => (
@@ -157,15 +144,11 @@ if (!job) {
               </div>
             </Card>
 
-            
-            
-
-            
-            <Card className="glass-card p-8">
+            <Card className="glass-card p-8 bg-card text-card-foreground border-border">
               <h2 className="text-2xl font-bold mb-6">Related Opportunities</h2>
               <div className="space-y-4">
                 {RELATED_JOBS.map((job) => (
-                  <div key={job.id} className="flex items-center justify-between p-4 rounded-lg bg-background/50 hover:bg-background transition-colors cursor-pointer">
+                  <div key={job.id} className="flex items-center justify-between p-4 rounded-lg bg-background/50 hover:bg-background transition-colors cursor-pointer border border-border/40">
                     <div>
                       <p className="font-medium">{job.title}</p>
                       <p className="text-sm text-muted-foreground">{job.company}</p>
@@ -179,11 +162,10 @@ if (!job) {
             </Card>
           </div>
 
-          
           <div className="lg:col-span-1">
-            <Card className="glass-card p-6 space-y-4 sticky top-24">
-              <Button className="w-full btn-premium"onClick={() => navigate(`/user/apply/${job.id}`)}
->               Apply Now
+            <Card className="glass-card p-6 space-y-4 sticky top-24 bg-card text-card-foreground border-border">
+              <Button className="w-full btn-premium" onClick={() => navigate(`/user/apply/${job.id}`)}>
+                Apply Now
               </Button>
 
               <Button variant="outline" className="w-full">
