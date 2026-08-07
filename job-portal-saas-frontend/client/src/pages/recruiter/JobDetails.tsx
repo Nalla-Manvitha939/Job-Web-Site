@@ -4,6 +4,7 @@ import { useRoute, useLocation } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTheme } from "@/contexts/ThemeContext";
 import {
   ArrowLeft,
   Building2,
@@ -16,6 +17,8 @@ import {
   Pencil,
   Trash2,
   Eye,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 interface Job {
@@ -42,6 +45,7 @@ interface Application {
 export default function RecruiterJobDetails() {
   const [, navigate] = useLocation();
   const [, params] = useRoute("/recruiter/job/:id");
+  const { theme, toggleTheme } = useTheme();
 
   const [job, setJob] = useState<Job | null>(null);
   const [applicantCount, setApplicantCount] = useState<number>(0);
@@ -87,9 +91,9 @@ export default function RecruiterJobDetails() {
 
   if (!job) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-background text-foreground p-6 transition-colors duration-300">
         <div className="max-w-7xl mx-auto flex justify-center items-center h-[70vh]">
-          <Card className="p-10 text-center">
+          <Card className="p-10 text-center bg-card text-card-foreground border-border shadow-sm">
             <h2 className="text-2xl font-bold">Job Not Found</h2>
             <p className="text-muted-foreground mt-2">
               This job doesn't exist anymore.
@@ -107,15 +111,15 @@ export default function RecruiterJobDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
+    <div className="min-h-screen bg-background text-foreground p-4 md:p-6 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-6">
-        
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
               size="icon"
               onClick={() => navigate("/recruiter/manage-jobs")}
+              className="border-border"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -128,10 +132,10 @@ export default function RecruiterJobDetails() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             <Button
               variant="outline"
-              className="flex-1 md:flex-none"
+              className="flex-1 md:flex-none border-border"
               onClick={() => navigate(`/recruiter/edit-job/${job.id}`)}
             >
               <Pencil className="w-4 h-4 mr-2" />
@@ -146,11 +150,23 @@ export default function RecruiterJobDetails() {
               <Trash2 className="w-4 h-4 mr-2" />
               Delete
             </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full ml-1"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
           </div>
         </div>
 
-        
-        <Card className="p-6 md:p-8">
+        <Card className="p-6 md:p-8 bg-card text-card-foreground border-border shadow-sm">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold">{job.title}</h2>
@@ -173,13 +189,14 @@ export default function RecruiterJobDetails() {
               </div>
             </div>
 
-            <Badge className="px-4 py-2 self-start">{job.status || "Active"}</Badge>
+            <Badge className="px-4 py-2 self-start">
+              {job.status || "Active"}
+            </Badge>
           </div>
         </Card>
 
-        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-          <Card className="p-5">
+          <Card className="p-5 bg-card text-card-foreground border-border shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Applicants</p>
@@ -189,7 +206,7 @@ export default function RecruiterJobDetails() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="p-5 bg-card text-card-foreground border-border shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Experience</p>
@@ -199,7 +216,7 @@ export default function RecruiterJobDetails() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="p-5 bg-card text-card-foreground border-border shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Employment</p>
@@ -211,7 +228,7 @@ export default function RecruiterJobDetails() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="p-5 bg-card text-card-foreground border-border shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Deadline</p>
@@ -222,18 +239,16 @@ export default function RecruiterJobDetails() {
           </Card>
         </div>
 
-        
         <div className="grid lg:grid-cols-3 gap-6">
-          
           <div className="lg:col-span-2 space-y-6">
-            <Card className="p-6 md:p-8">
+            <Card className="p-6 md:p-8 bg-card text-card-foreground border-border shadow-sm">
               <h2 className="text-xl font-bold mb-4 md:mb-6">Job Description</h2>
               <p className="leading-7 md:leading-8 text-muted-foreground whitespace-pre-wrap text-sm md:text-base">
                 {job.description || "No description available."}
               </p>
             </Card>
 
-            <Card className="p-6 md:p-8">
+            <Card className="p-6 md:p-8 bg-card text-card-foreground border-border shadow-sm">
               <h2 className="text-xl font-bold mb-4 md:mb-6">Required Skills</h2>
               {job.skills && job.skills.length > 0 ? (
                 <div className="flex flex-wrap gap-2 md:gap-3">
@@ -252,7 +267,7 @@ export default function RecruiterJobDetails() {
               )}
             </Card>
 
-            <Card className="p-6 md:p-8">
+            <Card className="p-6 md:p-8 bg-card text-card-foreground border-border shadow-sm">
               <h2 className="text-xl font-bold mb-4 md:mb-6">Job Information</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -291,10 +306,8 @@ export default function RecruiterJobDetails() {
             </Card>
           </div>
 
-          
           <div className="space-y-6">
-            
-            <Card className="p-6">
+            <Card className="p-6 bg-card text-card-foreground border-border shadow-sm">
               <h3 className="text-lg font-bold mb-5">Quick Actions</h3>
 
               <div className="space-y-3">
@@ -308,7 +321,7 @@ export default function RecruiterJobDetails() {
 
                 <Button
                   variant="outline"
-                  className="w-full"
+                  className="w-full border-border"
                   onClick={() => navigate("/recruiter/applicants")}
                 >
                   <Users className="w-4 h-4 mr-2" />
@@ -317,7 +330,7 @@ export default function RecruiterJobDetails() {
 
                 <Button
                   variant="outline"
-                  className="w-full"
+                  className="w-full border-border"
                   onClick={() => navigate("/recruiter/manage-jobs")}
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
@@ -335,8 +348,7 @@ export default function RecruiterJobDetails() {
               </div>
             </Card>
 
-            
-            <Card className="p-6">
+            <Card className="p-6 bg-card text-card-foreground border-border shadow-sm">
               <h3 className="text-lg font-bold mb-5">Job Status</h3>
 
               <div className="space-y-4">
@@ -365,8 +377,7 @@ export default function RecruiterJobDetails() {
               </div>
             </Card>
 
-            
-            <Card className="p-6">
+            <Card className="p-6 bg-card text-card-foreground border-border shadow-sm">
               <div className="flex items-start gap-4">
                 <Eye className="w-8 h-8 text-blue-600 mt-1 flex-shrink-0" />
 
