@@ -20,6 +20,7 @@ import {
   DollarSign,
   MapPin,
 } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface Application {
   id: number;
@@ -148,45 +149,35 @@ export default function MyApplications() {
   };
 
   return (
-        <div className="min-h-screen bg-background">
-
-      
-
+    <div className="min-h-screen bg-background text-foreground transition-colors">
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
-
-        <div className="container py-4">
-
-          <button
-            onClick={() => navigate("/user/dashboard")}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
-
+        <div className="container py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">
-              My Applications
-            </h1>
+            <button
+              onClick={() => navigate("/user/dashboard")}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </button>
 
-            <p className="text-sm text-muted-foreground">
-              Track all your submitted job applications.
-            </p>
+            <div>
+              <h1 className="text-2xl font-bold">
+                My Applications
+              </h1>
+
+              <p className="text-sm text-muted-foreground">
+                Track all your submitted job applications.
+              </p>
+            </div>
           </div>
-
+          <ThemeToggle />
         </div>
-
       </div>
 
-      
-
       <div className="container py-8">
-
-        
-
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border">
             <p className="text-sm text-muted-foreground">
               Total Applications
             </p>
@@ -196,7 +187,7 @@ export default function MyApplications() {
             </h2>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border">
             <p className="text-sm text-muted-foreground">
               Shortlisted
             </p>
@@ -206,7 +197,7 @@ export default function MyApplications() {
             </h2>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border">
             <p className="text-sm text-muted-foreground">
               Pending
             </p>
@@ -216,7 +207,7 @@ export default function MyApplications() {
             </h2>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border">
             <p className="text-sm text-muted-foreground">
               Rejected
             </p>
@@ -225,17 +216,11 @@ export default function MyApplications() {
               {stats.rejected}
             </h2>
           </Card>
-
         </div>
 
-        
-
-        <Card className="glass-card p-6 mb-8">
-
+        <Card className="glass-card p-6 mb-8 bg-card text-card-foreground border-border">
           <div className="grid md:grid-cols-2 gap-4">
-
             <div className="relative">
-
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 
               <Input
@@ -246,22 +231,17 @@ export default function MyApplications() {
                   setSearchQuery(e.target.value)
                 }
               />
-
             </div>
 
             <Select
               value={filterStatus}
               onValueChange={setFilterStatus}
             >
-
               <SelectTrigger>
-
                 <SelectValue placeholder="Filter Status" />
-
               </SelectTrigger>
 
               <SelectContent>
-
                 <SelectItem value="all">
                   All Status
                 </SelectItem>
@@ -281,22 +261,14 @@ export default function MyApplications() {
                 <SelectItem value="Rejected">
                   Rejected
                 </SelectItem>
-
               </SelectContent>
-
             </Select>
-
           </div>
-
         </Card>
-                
 
         <div className="space-y-4">
-
           {filteredApplications.length === 0 ? (
-
-            <Card className="glass-card p-12 text-center">
-
+            <Card className="glass-card p-12 text-center bg-card text-card-foreground border-border">
               <h2 className="text-xl font-semibold mb-2">
                 No Applications Found
               </h2>
@@ -313,22 +285,15 @@ export default function MyApplications() {
               >
                 Browse Jobs
               </Button>
-
             </Card>
-
           ) : (
-
             filteredApplications.map((app) => (
-
               <Card
                 key={app.id}
-                className="glass-card p-6 hover:shadow-xl transition-all"
+                className="glass-card p-6 hover:shadow-xl transition-all bg-card text-card-foreground border-border"
               >
-
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-
                   <div className="flex-1">
-
                     <h2 className="text-xl font-bold">
                       {app.jobTitle}
                     </h2>
@@ -338,7 +303,6 @@ export default function MyApplications() {
                     </p>
 
                     <div className="flex flex-wrap gap-3 mt-5">
-
                       <Badge
                         variant="outline"
                         className="flex items-center gap-2"
@@ -364,24 +328,17 @@ export default function MyApplications() {
                           app.appliedAt
                         ).toLocaleDateString()}
                       </Badge>
-
                     </div>
 
-                    <div className="mt-6 rounded-lg bg-muted/40 p-4">
-
+                    <div className="mt-6 rounded-lg bg-muted/40 p-4 border border-border/40">
                       <p className="text-sm text-muted-foreground">
-
                         <strong>Next Step:</strong>{" "}
                         {app.nextStep}
-
                       </p>
-
                     </div>
-
                   </div>
 
                   <div className="flex flex-col items-start lg:items-end gap-4">
-
                     <Badge
                       className={`${
                         STATUS_COLORS[app.status] ??
@@ -392,7 +349,6 @@ export default function MyApplications() {
                     </Badge>
 
                     <div className="flex gap-3">
-
                       <Button
                         variant="outline"
                         onClick={() =>
@@ -414,25 +370,14 @@ export default function MyApplications() {
                       >
                         View Resume
                       </Button>
-
                     </div>
-
                   </div>
-
                 </div>
-
               </Card>
-
             ))
-
           )}
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 }
