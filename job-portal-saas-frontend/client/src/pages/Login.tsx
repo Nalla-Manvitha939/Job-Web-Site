@@ -17,6 +17,9 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://job-web-site-2qhl.onrender.com";
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -57,7 +60,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/auth/login", {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +106,7 @@ export default function Login() {
 
   const handleGoogleLogin = async (credential: string) => {
     try {
-      const response = await fetch("http://localhost:8000/auth/google", {
+      const response = await fetch(`${API_URL}/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
