@@ -15,6 +15,7 @@ import {
 import { Search, MapPin, Briefcase, DollarSign, Bookmark, BookmarkCheck, ArrowLeft } from "lucide-react";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface Job {
   id: number;
@@ -110,25 +111,28 @@ export default function BrowseJobs() {
     }
 
     localStorage.setItem("savedJobs", JSON.stringify(updatedSavedJobs));
-    setSavedJobs(updatedSavedJobs);
+    setSavedJobs(updatedSavedJobs); // Fixed typo here from savedSavedJobs
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background text-foreground transition-colors">
       {/* Top Header & Navigation */}
-      <div className="sticky top-0 z-40 border-b border-blue-200 bg-white/95 backdrop-blur shadow-sm">
+      <div className="sticky top-0 z-45 border-b border-border bg-background/95 backdrop-blur shadow-sm">
         <div className="container py-5">
-          <button
-            onClick={() => navigate("/user/dashboard")}
-            className="mb-4 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => navigate("/user/dashboard")}
+              className="flex items-center gap-2 text-primary hover:opacity-80 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </button>
+            <ThemeToggle />
+          </div>
 
           <div>
-            <h1 className="text-3xl font-bold text-blue-700">Browse Jobs</h1>
-            <p className="mt-1 text-gray-500">Showing {filteredJobs.length} opportunities</p>
+            <h1 className="text-3xl font-bold text-primary">Browse Jobs</h1>
+            <p className="mt-1 text-muted-foreground">Showing {filteredJobs.length} opportunities</p>
           </div>
         </div>
       </div>
@@ -139,9 +143,9 @@ export default function BrowseJobs() {
           
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-             <Card className="sticky top-24 rounded-2xl border border-blue-200 bg-white p-6 shadow-md space-y-6">
+             <Card className="sticky top-24 rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-md space-y-6">
               <div>
-                <h3 className="mb-4 text-lg font-bold text-blue-700">Filters</h3>
+                <h3 className="mb-4 text-lg font-bold text-primary">Filters</h3>
               </div>
 
               {/* Search Filter */}
@@ -156,7 +160,7 @@ export default function BrowseJobs() {
                       setSearchQuery(e.target.value);
                       setCurrentPage(1);
                     }}
-                    className="pl-10 border-blue-200 focus:border-blue-600 focus:ring-blue-500"
+                    className="pl-10 border-input bg-background text-foreground focus:border-primary focus:ring-primary"
                   />
                 </div>
               </div>
@@ -198,7 +202,7 @@ export default function BrowseJobs() {
               {/* Clear Filters Button */}
               <Button
                 variant="outline"
-                className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                 onClick={() => {
                   setFilters({ type: "", mode: "" });
                   setSearchQuery("");
@@ -215,15 +219,15 @@ export default function BrowseJobs() {
             <div className="space-y-4">
               {paginatedJobs.length > 0 ? (
                 paginatedJobs.map((job) => (
-                  <Card key={job.id} className="rounded-2xl border border-blue-200 bg-white p-6 shadow-md hover:shadow-xl hover:border-blue-400 transition-all duration-300 group">
+                  <Card key={job.id} className="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-md hover:shadow-xl hover:border-primary transition-all duration-300 group">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-start gap-4 flex-1">
-                        <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center font-bold text-blue-700">
+                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary">
                           {job.company.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1">
                           <h3 
-                            className="text-lg font-bold text-gray-900 group-hover:text-blue-700 transition-colors cursor-pointer"
+                            className="text-lg font-bold group-hover:text-primary transition-colors cursor-pointer"
                             onClick={() => navigate(`/user/job/${job.id}`)}
                           >
                             {job.title}
@@ -235,14 +239,14 @@ export default function BrowseJobs() {
                       {/* Bookmark Save Button */}
                       <button
                         onClick={() => toggleSaveJob(job)}
-                        className="text-gray-500 hover:text-blue-600 transition-colors"
+                        className="text-muted-foreground hover:text-primary transition-colors"
                       >
                         {savedJobs.some(
                           (item: any) =>
                             item.jobId === job.id &&
                             item.userId === currentUser?.id
                         ) ? (
-                          <BookmarkCheck className="w-5 h-5 text-blue-600" />
+                          <BookmarkCheck className="w-5 h-5 text-primary" />
                         ) : (
                           <Bookmark className="w-5 h-5" />
                         )}
@@ -271,7 +275,7 @@ export default function BrowseJobs() {
                       {job.skills.map((skill) => (
                         <Badge
                           key={skill} 
-                          className="bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200"
+                          className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20"
                         >
                           {skill}
                         </Badge>
@@ -279,17 +283,17 @@ export default function BrowseJobs() {
                     </div>
 
                     <div className="flex gap-3">
-                      <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg" onClick={() => navigate(`/user/job/${job.id}`)}>
+                      <Button className="flex-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg" onClick={() => navigate(`/user/job/${job.id}`)}>
                         View Details
                       </Button>
-                      <Button variant="outline" className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg" onClick={() => navigate(`/user/apply/${job.id}`)}>
+                      <Button variant="outline" className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg" onClick={() => navigate(`/user/apply/${job.id}`)}>
                         Apply Now
                       </Button>
                     </div>
                   </Card>
                 ))
               ) : (
-                <Card className="p-12 text-center border border-blue-200 bg-white">
+                <Card className="p-12 text-center border border-border bg-card text-card-foreground">
                   <p className="text-muted-foreground">No jobs found matching your criteria.</p>
                 </Card>
               )}
@@ -303,7 +307,7 @@ export default function BrowseJobs() {
                     <PaginationItem>
                       <PaginationPrevious
                         onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                        className={`border border-blue-200 text-blue-600 hover:bg-blue-100 ${
+                        className={`border border-border text-foreground hover:bg-muted ${
                           currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
                         }`}
                       />
@@ -315,8 +319,8 @@ export default function BrowseJobs() {
                           isActive={currentPage === page}
                           className={`cursor-pointer ${
                             currentPage === page
-                              ? "bg-blue-600 text-white border-blue-600"
-                              : "text-blue-600 border-blue-200 hover:bg-blue-100"
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "text-foreground border-border hover:bg-muted"
                           }`}
                         >
                           {page}
@@ -326,7 +330,7 @@ export default function BrowseJobs() {
                     <PaginationItem>
                       <PaginationNext
                         onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                        className={`border border-blue-200 text-blue-600 hover:bg-blue-100 ${
+                        className={`border border-border text-foreground hover:bg-muted ${
                           currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"
                         }`}
                       />
