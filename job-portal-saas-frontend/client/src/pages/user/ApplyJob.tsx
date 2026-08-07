@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Upload, FileText } from "lucide-react";
 import { useLocation, useRoute } from "wouter";
 import { useEffect, useState, useRef } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function ApplyJob() {
   const [, navigate] = useLocation();
@@ -15,7 +16,6 @@ export default function ApplyJob() {
   const [job, setJob] = useState<any>(null);
   const isInitialized = useRef(false); 
 
-  
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -29,7 +29,6 @@ export default function ApplyJob() {
   });
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  
   useEffect(() => {
     if (!jobId) return;
 
@@ -43,7 +42,6 @@ export default function ApplyJob() {
     }
   }, [jobId]);
 
-  
   useEffect(() => {
     if (isInitialized.current) return;
 
@@ -191,17 +189,19 @@ export default function ApplyJob() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      
+    <div className="min-h-screen bg-background text-foreground transition-colors">
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
         <div className="container py-4">
-          <button
-            onClick={() => navigate("/user/browse-jobs")}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Job
-          </button>
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => navigate("/user/browse-jobs")}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Job
+            </button>
+            <ThemeToggle />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">Apply for {job?.title || "Loading..."}</h1>
             <p className="text-sm text-muted-foreground">at {job?.company || ""}</p>
@@ -209,12 +209,10 @@ export default function ApplyJob() {
         </div>
       </div>
 
-      
       <div className="container py-8">
         <div className="max-w-2xl mx-auto">
-          <Card className="glass-card p-8">
+          <Card className="glass-card p-8 bg-card text-card-foreground border-border shadow-md">
             <form onSubmit={handleSubmit} className="space-y-6">
-              
               <div>
                 <h2 className="text-xl font-bold mb-4">Personal Information</h2>
                 <div className="space-y-4">
@@ -259,7 +257,6 @@ export default function ApplyJob() {
                 </div>
               </div>
 
-              
               <div>
                 <h2 className="text-xl font-bold mb-4">Resume</h2>
                 <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-accent transition-colors cursor-pointer">
@@ -298,7 +295,6 @@ export default function ApplyJob() {
                 </div>
               </div>
 
-              
               <div>
                 <h2 className="text-xl font-bold mb-4">Cover Letter</h2>
                 <Label htmlFor="coverLetter">Tell us why you're a great fit for this role</Label>
@@ -313,7 +309,6 @@ export default function ApplyJob() {
                 />
               </div>
 
-              
               <div>
                 <Label htmlFor="portfolioLink">Portfolio Link (Optional)</Label>
                 <Input
@@ -326,7 +321,6 @@ export default function ApplyJob() {
                 />
               </div>
 
-              
               <div>
                 <Label htmlFor="additionalNotes">Additional Notes (Optional)</Label>
                 <Textarea
@@ -340,7 +334,6 @@ export default function ApplyJob() {
                 />
               </div>
 
-              
               <div className="flex gap-4 pt-6">
                 <Button type="submit" className="flex-1 btn-premium">
                   Submit Application
@@ -355,7 +348,6 @@ export default function ApplyJob() {
                 </Button>
               </div>
 
-             
               <div className="bg-accent/5 border border-accent/20 rounded-lg p-4 text-sm text-muted-foreground">
                 <p>
                   <strong>Note:</strong> By submitting this application, you agree to our Terms of Service and Privacy Policy. We'll review your application and get back to you within 5 business days.
