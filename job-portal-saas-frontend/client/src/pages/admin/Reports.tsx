@@ -13,12 +13,15 @@ import {
   Eye,
   CheckCircle,
   XCircle,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Report {
   id: number;
@@ -71,6 +74,7 @@ const REPORTS: Report[] = [
 
 export default function ReportsPage() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -106,16 +110,10 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-
-      
-
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-
         <div className="container py-4 flex items-center justify-between">
-
           <div className="flex items-center gap-4">
-
             <Button
               variant="ghost"
               size="icon"
@@ -125,7 +123,6 @@ export default function ReportsPage() {
             </Button>
 
             <div>
-
               <h1 className="text-2xl font-bold">
                 Reports & Moderation
               </h1>
@@ -133,23 +130,27 @@ export default function ReportsPage() {
               <p className="text-sm text-muted-foreground">
                 Review flagged content and moderate platform activity.
               </p>
-
             </div>
-
           </div>
 
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
-
       </div>
 
       <div className="container py-8 space-y-8">
-
-        
-
         <div className="grid md:grid-cols-4 gap-6">
-
           <Card className="glass-card p-6">
-
             <ShieldAlert className="w-8 h-8 text-red-600 mb-3" />
 
             <p className="text-sm text-muted-foreground">
@@ -159,11 +160,9 @@ export default function ReportsPage() {
             <h2 className="text-3xl font-bold">
               {REPORTS.length}
             </h2>
-
           </Card>
 
           <Card className="glass-card p-6">
-
             <Clock className="w-8 h-8 text-orange-600 mb-3" />
 
             <p className="text-sm text-muted-foreground">
@@ -173,11 +172,9 @@ export default function ReportsPage() {
             <h2 className="text-3xl font-bold">
               {REPORTS.filter(r => r.status === "Pending").length}
             </h2>
-
           </Card>
 
           <Card className="glass-card p-6">
-
             <CheckCircle className="w-8 h-8 text-green-600 mb-3" />
 
             <p className="text-sm text-muted-foreground">
@@ -187,11 +184,9 @@ export default function ReportsPage() {
             <h2 className="text-3xl font-bold">
               {REPORTS.filter(r => r.status === "Resolved").length}
             </h2>
-
           </Card>
 
           <Card className="glass-card p-6">
-
             <AlertTriangle className="w-8 h-8 text-yellow-600 mb-3" />
 
             <p className="text-sm text-muted-foreground">
@@ -201,19 +196,12 @@ export default function ReportsPage() {
             <h2 className="text-3xl font-bold">
               {REPORTS.filter(r => r.severity === "High").length}
             </h2>
-
           </Card>
-
         </div>
 
-        
-
         <Card className="glass-card p-6">
-
           <div className="flex flex-col md:flex-row gap-4">
-
             <div className="relative flex-1">
-
               <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
 
               <Input
@@ -222,11 +210,10 @@ export default function ReportsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-
             </div>
 
             <select
-              className="border rounded-lg px-4 py-2 bg-background"
+              className="border rounded-lg px-4 py-2 bg-background text-foreground"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -234,22 +221,14 @@ export default function ReportsPage() {
               <option>Pending</option>
               <option>Resolved</option>
             </select>
-
           </div>
-
         </Card>
-                
 
         <Card className="glass-card overflow-hidden">
-
           <div className="overflow-x-auto">
-
             <table className="w-full">
-
               <thead className="border-b bg-muted/40">
-
                 <tr>
-
                   <th className="text-left p-4 font-semibold">
                     Report
                   </th>
@@ -273,47 +252,32 @@ export default function ReportsPage() {
                   <th className="text-right p-4 font-semibold">
                     Actions
                   </th>
-
                 </tr>
-
               </thead>
 
               <tbody>
-
                 {filteredReports.length === 0 ? (
-
                   <tr>
-
                     <td
                       colSpan={6}
                       className="py-12 text-center text-muted-foreground"
                     >
                       No reports found.
                     </td>
-
                   </tr>
-
                 ) : (
-
                   filteredReports.map((report) => (
-
                     <tr
                       key={report.id}
                       className="border-b hover:bg-muted/30 transition-colors"
                     >
-
                       <td className="p-4">
-
                         <div className="flex items-start gap-3">
-
                           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-
                             {getTypeIcon(report.type)}
-
                           </div>
 
                           <div>
-
                             <p className="font-semibold">
                               {report.title}
                             </p>
@@ -321,11 +285,8 @@ export default function ReportsPage() {
                             <p className="text-sm text-muted-foreground">
                               {report.type}
                             </p>
-
                           </div>
-
                         </div>
-
                       </td>
 
                       <td className="p-4">
@@ -337,7 +298,6 @@ export default function ReportsPage() {
                       </td>
 
                       <td className="p-4">
-
                         <Badge
                           className={
                             report.severity === "High"
@@ -349,11 +309,9 @@ export default function ReportsPage() {
                         >
                           {report.severity}
                         </Badge>
-
                       </td>
 
                       <td className="p-4">
-
                         <Badge
                           className={
                             report.status === "Resolved"
@@ -363,13 +321,10 @@ export default function ReportsPage() {
                         >
                           {report.status}
                         </Badge>
-
                       </td>
 
                       <td className="p-4">
-
                         <div className="flex justify-end gap-2">
-
                           <Button
                             size="icon"
                             variant="outline"
@@ -381,7 +336,7 @@ export default function ReportsPage() {
                             <Eye className="w-4 h-4" />
                           </Button>
 
-                                                    <Button
+                          <Button
                             size="icon"
                             variant="outline"
                             title="Resolve Report"
@@ -402,33 +357,19 @@ export default function ReportsPage() {
                           >
                             <XCircle className="w-4 h-4" />
                           </Button>
-
                         </div>
-
                       </td>
-
                     </tr>
-
                   ))
-
                 )}
-
               </tbody>
-
             </table>
-
           </div>
-
         </Card>
 
-        
-
         <Card className="glass-card p-6">
-
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
             <div>
-
               <h2 className="text-lg font-semibold">
                 Moderation Summary
               </h2>
@@ -438,11 +379,9 @@ export default function ReportsPage() {
                 Review pending reports regularly to maintain platform quality
                 and user trust.
               </p>
-
             </div>
 
             <div className="flex flex-wrap gap-3">
-
               <Badge variant="secondary">
                 Pending:{" "}
                 {REPORTS.filter((r) => r.status === "Pending").length}
@@ -457,18 +396,10 @@ export default function ReportsPage() {
                 High Severity:{" "}
                 {REPORTS.filter((r) => r.severity === "High").length}
               </Badge>
-
             </div>
-
           </div>
-
         </Card>
-
       </div>
-
     </div>
-
   );
-
 }
-                            
