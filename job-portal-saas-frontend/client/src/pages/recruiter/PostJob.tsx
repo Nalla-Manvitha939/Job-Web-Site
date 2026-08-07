@@ -11,6 +11,8 @@ import {
   Save,
   Send,
   RotateCcw,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -18,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface JobForm {
   title: string;
@@ -45,6 +48,7 @@ const INITIAL_JOB: JobForm = {
 
 export default function PostJob() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const [job, setJob] = useState<JobForm>(INITIAL_JOB);
 
@@ -89,7 +93,6 @@ export default function PostJob() {
   };
 
   const publishJob = () => {
-    
     if (
       !job.title.trim() ||
       !job.company.trim() ||
@@ -104,7 +107,6 @@ export default function PostJob() {
       return;
     }
 
-    
     const currentUser = JSON.parse(
       localStorage.getItem("currentUser") || "null"
     );
@@ -115,12 +117,10 @@ export default function PostJob() {
       return;
     }
 
-    
     const jobs = JSON.parse(
       localStorage.getItem("jobs") || "[]"
     );
 
-    
     const newJob = {
       id: Date.now(),
       title: job.title,
@@ -141,7 +141,6 @@ export default function PostJob() {
       createdAt: new Date().toISOString(),
     };
 
-    
     jobs.push(newJob);
 
     localStorage.setItem("jobs", JSON.stringify(jobs));
@@ -150,19 +149,15 @@ export default function PostJob() {
 
     alert("Job Published Successfully!");
 
-    
     setJob(INITIAL_JOB);
     setSkills([]);
     setSkillInput("");
 
-    
     navigate("/recruiter/manage-jobs");
   };
 
   return (
-    <div className="min-h-screen bg-background">
-
-      
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
         <div className="container py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -184,12 +179,23 @@ export default function PostJob() {
               </p>
             </div>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
       <div className="container py-8 space-y-8">
-
-        
         <Card className="glass-card p-8">
           <h2 className="text-xl font-semibold mb-6">
             Job Information
@@ -300,7 +306,6 @@ export default function PostJob() {
           </div>
         </Card>
 
-        
         <Card className="glass-card p-8">
           <h2 className="text-xl font-semibold mb-6">
             Job Description
@@ -315,7 +320,6 @@ export default function PostJob() {
           />
         </Card>
 
-        
         <Card className="glass-card p-8">
           <h2 className="text-xl font-semibold mb-6">
             Required Skills
@@ -365,40 +369,38 @@ export default function PostJob() {
           </div>
         </Card>
 
-        
         <Card className="glass-card p-8">
           <h2 className="text-xl font-semibold mb-6">
             Benefits & Perks
           </h2>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="rounded-xl border p-5">
+            <div className="rounded-xl border border-border p-5">
               ✅ Health Insurance
             </div>
 
-            <div className="rounded-xl border p-5">
+            <div className="rounded-xl border border-border p-5">
               ✅ Remote Work
             </div>
 
-            <div className="rounded-xl border p-5">
+            <div className="rounded-xl border border-border p-5">
               ✅ Flexible Working Hours
             </div>
 
-            <div className="rounded-xl border p-5">
+            <div className="rounded-xl border border-border p-5">
               ✅ Annual Bonus
             </div>
 
-            <div className="rounded-xl border p-5">
+            <div className="rounded-xl border border-border p-5">
               ✅ Paid Leaves
             </div>
 
-            <div className="rounded-xl border p-5">
+            <div className="rounded-xl border border-border p-5">
               ✅ Learning Budget
             </div>
           </div>
         </Card>
 
-        
         <Card className="glass-card p-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold">
@@ -487,7 +489,6 @@ export default function PostJob() {
           </div>
         </Card>
 
-        
         <Card className="glass-card p-8">
           <h2 className="text-xl font-semibold mb-6">
             Publishing Tips
@@ -516,7 +517,6 @@ export default function PostJob() {
           </ul>
         </Card>
 
-        
         <div className="flex flex-col md:flex-row justify-end gap-4">
           <Button
             variant="outline"
@@ -539,7 +539,6 @@ export default function PostJob() {
             Publish Job
           </Button>
         </div>
-
       </div>
     </div>
   );
