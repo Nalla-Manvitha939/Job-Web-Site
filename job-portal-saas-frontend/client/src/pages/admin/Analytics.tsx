@@ -9,6 +9,8 @@ import {
   TrendingUp,
   Activity,
   Calendar,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import {
@@ -29,20 +31,20 @@ import {
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const PIE_COLORS = ["#3b82f6", "#8b5cf6", "#22c55e"];
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export default function AnalyticsPage() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
-  
   const [users, setUsers] = useState<any[]>([]);
   const [jobs, setJobs] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [companies, setCompanies] = useState<any[]>([]);
 
-  
   useEffect(() => {
     const loadData = () => {
       setUsers(JSON.parse(localStorage.getItem("users") || "[]"));
@@ -61,10 +63,8 @@ export default function AnalyticsPage() {
     return () => window.removeEventListener("storage", loadData);
   }, []);
 
-  
   const totalUsers = users.length;
 
-  
   const totalRecruiters = users.filter((u) => {
     const role = (u.role || "").toLowerCase();
     return role === "recruiter";
@@ -150,8 +150,7 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
         <div className="container py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -170,11 +169,23 @@ export default function AnalyticsPage() {
               </p>
             </div>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
       <div className="container py-8 space-y-8">
-        
         <div className="grid md:grid-cols-4 gap-6">
           <Card className="glass-card p-6">
             <Users className="w-8 h-8 text-blue-600 mb-3" />
@@ -205,7 +216,6 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
-        
         <div className="grid lg:grid-cols-2 gap-6">
           <Card className="glass-card p-6">
             <div className="flex items-center gap-2 mb-6">
@@ -258,9 +268,7 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
-        
         <div className="grid lg:grid-cols-3 gap-6">
-          
           <Card className="glass-card p-6">
             <div className="flex items-center gap-2 mb-6">
               <Users className="w-5 h-5 text-primary" />
@@ -277,7 +285,7 @@ export default function AnalyticsPage() {
                   dataKey="value"
                   label
                 >
-                  {USER_DISTRIBUTION.map((entry, index) => (
+                  {USER_DISTRIBUTION.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={PIE_COLORS[index % PIE_COLORS.length]}
@@ -290,7 +298,6 @@ export default function AnalyticsPage() {
             </ResponsiveContainer>
           </Card>
 
-          
           <Card className="glass-card p-6 lg:col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <TrendingUp className="w-5 h-5 text-primary" />
@@ -347,7 +354,6 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
-        
         <Card className="glass-card p-6">
           <div className="flex items-center gap-2 mb-6">
             <Calendar className="w-5 h-5 text-primary" />
@@ -379,7 +385,6 @@ export default function AnalyticsPage() {
           </div>
         </Card>
 
-        
         <Card className="glass-card p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
