@@ -12,6 +12,8 @@ import {
   Users,
   Save,
   RotateCcw,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -19,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface CompanyData {
   companyName: string;
@@ -50,10 +53,10 @@ const DEFAULT_COMPANY: CompanyData = {
 
 export default function CompanyProfile() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const [company, setCompany] = useState<CompanyData>(DEFAULT_COMPANY);
 
-  
   useEffect(() => {
     const savedCompany = localStorage.getItem("companyProfile");
     if (savedCompany) {
@@ -96,9 +99,8 @@ export default function CompanyProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      
-      <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur shadow-sm">
         <div className="container py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
             <Button
@@ -117,10 +119,10 @@ export default function CompanyProfile() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3 w-full md:w-auto justify-start md:justify-end">
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-start md:justify-end">
             <Button
               variant="outline"
-              className="flex-1 md:flex-none"
+              className="flex-1 md:flex-none border-border"
               onClick={handleReset}
             >
               <RotateCcw className="w-4 h-4 mr-2" />
@@ -134,20 +136,31 @@ export default function CompanyProfile() {
               <Save className="w-4 h-4 mr-2" />
               Save Profile
             </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full ml-1"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="container py-8 space-y-8">
-        
-        <Card className="glass-card p-8">
+        <Card className="glass-card p-8 bg-card text-card-foreground border-border shadow-sm">
           <div className="grid lg:grid-cols-3 gap-8">
-            
             <div className="flex flex-col items-center">
               <img
                 src={company.logo}
                 alt="Company Logo"
-                className="w-44 h-44 rounded-3xl object-cover border shadow-xl"
+                className="w-44 h-44 rounded-3xl object-cover border border-border shadow-xl"
               />
 
               <label className="w-full">
@@ -157,7 +170,7 @@ export default function CompanyProfile() {
                   hidden
                   onChange={handleLogoUpload}
                 />
-                <Button variant="outline" className="mt-5 w-full" asChild>
+                <Button variant="outline" className="mt-5 w-full border-border" asChild>
                   <span>
                     <Upload className="w-4 h-4 mr-2" />
                     Upload Logo
@@ -172,7 +185,6 @@ export default function CompanyProfile() {
               </p>
             </div>
 
-            
             <div className="lg:col-span-2 grid md:grid-cols-2 gap-5">
               <div>
                 <label className="text-sm font-medium mb-2 block">
@@ -182,6 +194,7 @@ export default function CompanyProfile() {
                   name="companyName"
                   value={company.companyName}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
 
@@ -193,6 +206,7 @@ export default function CompanyProfile() {
                   name="industry"
                   value={company.industry}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
 
@@ -204,6 +218,7 @@ export default function CompanyProfile() {
                   name="companySize"
                   value={company.companySize}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
 
@@ -215,6 +230,7 @@ export default function CompanyProfile() {
                   name="founded"
                   value={company.founded}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
 
@@ -226,6 +242,7 @@ export default function CompanyProfile() {
                   name="website"
                   value={company.website}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
 
@@ -237,6 +254,7 @@ export default function CompanyProfile() {
                   name="email"
                   value={company.email}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
 
@@ -248,6 +266,7 @@ export default function CompanyProfile() {
                   name="phone"
                   value={company.phone}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
 
@@ -259,55 +278,54 @@ export default function CompanyProfile() {
                   name="location"
                   value={company.location}
                   onChange={handleChange}
+                  className="bg-background text-foreground border-border"
                 />
               </div>
             </div>
           </div>
         </Card>
 
-        
-        <Card className="glass-card p-6">
+        <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
           <h2 className="text-lg font-semibold mb-5">Company Description</h2>
           <Textarea
             name="description"
             value={company.description}
             onChange={handleChange}
             rows={8}
+            className="bg-background text-foreground border-border"
           />
         </Card>
 
-        
         <div className="grid md:grid-cols-4 gap-6">
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <Building2 className="w-10 h-10 text-blue-600 mb-4" />
             <p className="text-sm text-muted-foreground">Industry</p>
             <h3 className="font-bold mt-2">{company.industry}</h3>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <Users className="w-10 h-10 text-purple-600 mb-4" />
             <p className="text-sm text-muted-foreground">Company Size</p>
             <h3 className="font-bold mt-2">{company.companySize}</h3>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <Calendar className="w-10 h-10 text-green-600 mb-4" />
             <p className="text-sm text-muted-foreground">Founded</p>
             <h3 className="font-bold mt-2">{company.founded}</h3>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <MapPin className="w-10 h-10 text-orange-600 mb-4" />
             <p className="text-sm text-muted-foreground">Headquarters</p>
             <h3 className="font-bold mt-2">{company.location}</h3>
           </Card>
         </div>
 
-        
-        <Card className="glass-card p-6">
+        <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
           <h2 className="text-lg font-semibold mb-5">Contact Information</h2>
           <div className="grid md:grid-cols-3 gap-5">
-            <div className="rounded-xl border p-5 flex items-start gap-4">
+            <div className="rounded-xl border border-border p-5 flex items-start gap-4 bg-background/40">
               <Globe className="w-6 h-6 text-blue-600" />
               <div>
                 <p className="text-sm text-muted-foreground">Website</p>
@@ -315,7 +333,7 @@ export default function CompanyProfile() {
               </div>
             </div>
 
-            <div className="rounded-xl border p-5 flex items-start gap-4">
+            <div className="rounded-xl border border-border p-5 flex items-start gap-4 bg-background/40">
               <Mail className="w-6 h-6 text-green-600" />
               <div>
                 <p className="text-sm text-muted-foreground">Email</p>
@@ -323,7 +341,7 @@ export default function CompanyProfile() {
               </div>
             </div>
 
-            <div className="rounded-xl border p-5 flex items-start gap-4">
+            <div className="rounded-xl border border-border p-5 flex items-start gap-4 bg-background/40">
               <Phone className="w-6 h-6 text-purple-600" />
               <div>
                 <p className="text-sm text-muted-foreground">Phone</p>
@@ -333,8 +351,7 @@ export default function CompanyProfile() {
           </div>
         </Card>
 
-        
-        <Card className="glass-card p-6">
+        <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h2 className="text-lg font-semibold">Company Status</h2>
@@ -348,13 +365,12 @@ export default function CompanyProfile() {
                 Verified Company
               </Badge>
               <Badge variant="secondary">Hiring</Badge>
-              <Badge variant="outline">Profile Complete</Badge>
+              <Badge variant="outline" className="border-border">Profile Complete</Badge>
             </div>
           </div>
         </Card>
 
-        
-        <Card className="glass-card p-6">
+        <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Profile Completion</h2>
             <span className="text-sm font-semibold text-primary">100%</span>
