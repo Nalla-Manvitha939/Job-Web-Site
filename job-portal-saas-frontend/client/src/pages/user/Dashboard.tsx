@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Briefcase, BookmarkCheck, Calendar, CheckCircle, ArrowRight, TrendingUp } from "lucide-react";
 import { useLocation } from "wouter";
 import { useEffect, useState, useMemo } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function UserDashboard() {
   const [, navigate] = useLocation();
@@ -165,9 +166,12 @@ export default function UserDashboard() {
             <h1 className="text-2xl font-bold">Dashboard</h1>
             <p className="text-sm text-muted-foreground">Welcome back! Here's your job search summary</p>
           </div>
-          <Button onClick={() => navigate("/user/browse-jobs")}>
-            Browse Jobs <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Button onClick={() => navigate("/user/browse-jobs")}>
+              Browse Jobs <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
         </div>
       </div>
 
