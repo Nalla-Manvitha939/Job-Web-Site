@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MapPin, Briefcase, Trash2, Building } from "lucide-react";
+import { ArrowLeft, MapPin, Briefcase, Trash2, Building, Sun, Moon } from "lucide-react";
 import { useLocation } from "wouter";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function SavedJobs() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
   const [savedJobsList, setSavedJobsList] = useState<any[]>([]);
 
   useEffect(() => {
@@ -54,75 +56,95 @@ export default function SavedJobs() {
   };
 
   return (
-    <div className="min-h-screen bg-background container py-8">
-      <button
-        onClick={() => navigate("/user/dashboard")}
-        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Dashboard
-      </button>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <div className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur shadow-sm">
+        <div className="container py-4">
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => navigate("/user/dashboard")}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
 
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Saved Jobs ({savedJobsList.length})</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold">Saved Jobs ({savedJobsList.length})</h1>
+          </div>
+        </div>
       </div>
 
-      {savedJobsList.length === 0 ? (
-        <Card className="p-12 text-center text-muted-foreground">
-          <p>You haven't saved any jobs yet.</p>
-        </Card>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {savedJobsList.map((job) => (
-            <Card key={job.id || job.jobId} className="glass-card p-6 flex flex-col justify-between">
-              <div>
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center font-bold text-accent">
-                    {job.company?.[0] || job.title?.[0] || "JP"}
+      <div className="container py-8">
+        {savedJobsList.length === 0 ? (
+          <Card className="p-12 text-center text-muted-foreground bg-card text-card-foreground border-border">
+            <p>You haven't saved any jobs yet.</p>
+          </Card>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {savedJobsList.map((job) => (
+              <Card key={job.id || job.jobId} className="p-6 flex flex-col justify-between bg-card text-card-foreground border-border shadow-sm">
+                <div>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center font-bold text-accent">
+                      {job.company?.[0] || job.title?.[0] || "JP"}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive hover:bg-destructive/10"
+                      onClick={() => handleRemove(job.id || job.jobId)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-destructive hover:bg-destructive/10"
-                    onClick={() => handleRemove(job.id || job.jobId)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+
+                  <h3 className="font-bold text-lg mb-1">
+                    {job.title || job.jobTitle || "Untitled Job"}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4 flex items-center gap-1">
+                    <Building className="w-3.5 h-3.5" />
+                    {job.company || "Unknown Company"}
+                  </p>
+
+                  <div className="space-y-2 mb-4 text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Briefcase className="w-4 h-4" />
+                      {job.experience || job.jobType || "Full-time"}
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin className="w-4 h-4" />
+                      {job.location || job.mode || "Remote"}
+                    </div>
+                    <div className="font-semibold text-accent">
+                      {job.salary || "Competitive"}
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="font-bold text-lg mb-1">
-                  {job.title || job.jobTitle || "Untitled Job"}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4 flex items-center gap-1">
-                  <Building className="w-3.5 h-3.5" />
-                  {job.company || "Unknown Company"}
-                </p>
-
-                <div className="space-y-2 mb-4 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Briefcase className="w-4 h-4" />
-                    {job.experience || job.jobType || "Full-time"}
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin className="w-4 h-4" />
-                    {job.location || job.mode || "Remote"}
-                  </div>
-                  <div className="font-semibold text-accent">
-                    {job.salary || "Competitive"}
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                className="w-full mt-4"
-                onClick={() => navigate(`/user/apply/${job.id || job.jobId}`)}
-              >
-                View Details
-              </Button>
-            </Card>
-          ))}
-        </div>
-      )}
+                <Button
+                  className="w-full mt-4"
+                  onClick={() => navigate(`/user/apply/${job.id || job.jobId}`)}
+                >
+                  View Details
+                </Button>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
