@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Search, MapPin, Briefcase, Users, TrendingUp, CheckCircle, Zap } from "lucide-react";
+import { ArrowRight, Search, MapPin, Briefcase, Users, TrendingUp, CheckCircle, Zap, Sun, Moon } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const FEATURED_JOBS = [
   {
@@ -62,6 +63,7 @@ const CATEGORIES = [
 export default function Home() {
   const [, navigate] = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const handleBrowseJobs = () => {
     if (isAuthenticated) {
@@ -72,7 +74,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex items-center justify-between h-16">
@@ -93,6 +95,19 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
+
             {isAuthenticated ? (
               <>
                 <Button
@@ -144,7 +159,7 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="container py-20 md:py-32 bg-gradient-to-r from-blue-50 via-white to-blue-50 rounded-3xl my-6"
+        className="container py-20 md:py-32 bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-slate-900 dark:via-background dark:to-slate-900 rounded-3xl my-6 transition-colors"
       >
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
