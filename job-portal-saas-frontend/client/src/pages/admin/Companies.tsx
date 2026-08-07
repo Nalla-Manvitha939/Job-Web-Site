@@ -10,15 +10,19 @@ import {
   Pencil,
   Trash2,
   CheckCircle,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function CompaniesPage() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const [companies, setCompanies] = useState<any[]>([]);
   const [jobs, setJobs] = useState<any[]>([]);
@@ -71,8 +75,7 @@ export default function CompaniesPage() {
   }, [companies, search, statusFilter]);
 
   return (
-    <div className="min-h-screen bg-background">
-      
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
         <div className="container py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -91,11 +94,23 @@ export default function CompaniesPage() {
               </p>
             </div>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
       <div className="container py-8 space-y-8">
-        
         <div className="grid md:grid-cols-4 gap-6">
           <Card className="glass-card p-6">
             <Building className="w-8 h-8 text-blue-600 mb-3" />
@@ -135,7 +150,6 @@ export default function CompaniesPage() {
           </Card>
         </div>
 
-        
         <Card className="glass-card p-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
@@ -149,7 +163,7 @@ export default function CompaniesPage() {
             </div>
 
             <select
-              className="border rounded-lg px-4 py-2 bg-background"
+              className="border rounded-lg px-4 py-2 bg-background text-foreground"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -160,7 +174,6 @@ export default function CompaniesPage() {
           </div>
         </Card>
 
-        
         <Card className="glass-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -291,7 +304,6 @@ export default function CompaniesPage() {
           </div>
         </Card>
 
-        
         <Card className="glass-card p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
