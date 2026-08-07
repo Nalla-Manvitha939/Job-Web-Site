@@ -22,6 +22,9 @@ export default function Register() {
     agreeTerms: false,
   });
 
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://job-web-site-2qhl.onrender.com";
+
   const passwordStrength =
     formData.password.length >= 8
       ? "strong"
@@ -51,7 +54,7 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/auth/register", {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
