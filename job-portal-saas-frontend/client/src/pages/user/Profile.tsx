@@ -5,12 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Upload, Trash2, Plus } from "lucide-react";
+import { ArrowLeft, Upload, Trash2, Plus, Sun, Moon } from "lucide-react";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Profile() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     userId: 0,
@@ -138,19 +140,33 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="sticky top-0 z-40 border-b border-blue-200 bg-white/95 backdrop-blur shadow-sm">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <div className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur shadow-sm">
         <div className="container py-4">
-          <button
-            onClick={() => navigate("/user/dashboard")}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
+          <div className="flex items-center justify-between mb-2">
+            <button
+              onClick={() => navigate("/user/dashboard")}
+              className="flex items-center gap-2 text-primary hover:opacity-80 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-blue-700">My Profile</h1>
+              <h1 className="text-3xl font-bold text-primary">My Profile</h1>
               <p className="text-sm text-muted-foreground">Manage your profile and professional information</p>
             </div>
             <Button
@@ -165,7 +181,7 @@ export default function Profile() {
 
       <div className="container py-8">
         <div className="max-w-4xl mx-auto space-y-8">
-          <Card className="rounded-2xl border border-blue-200 bg-white p-6 shadow-md">
+          <Card className="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-md">
             <div className="flex items-start gap-6 mb-6">
               <div className="flex flex-col items-center">
                 <div className="relative">
@@ -173,10 +189,10 @@ export default function Profile() {
                     <img
                       src={profileImage}
                       alt="Profile"
-                      className="w-24 h-24 rounded-full object-cover border"
+                      className="w-24 h-24 rounded-full object-cover border border-border"
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full bg-accent/10 flex items-center justify-center text-3xl font-bold text-accent">
+                    <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-3xl font-bold text-primary">
                       {profileData.firstName?.charAt(0)}
                       {profileData.lastName?.charAt(0)}
                     </div>
@@ -228,7 +244,6 @@ export default function Profile() {
                           name="firstName"
                           value={profileData.firstName}
                           onChange={handleChange}
-                          className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -238,7 +253,6 @@ export default function Profile() {
                           name="lastName"
                           value={profileData.lastName}
                           onChange={handleChange}
-                          className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                         />
                       </div>
                     </div>
@@ -250,7 +264,6 @@ export default function Profile() {
                         value={profileData.headline}
                         onChange={handleChange}
                         placeholder="e.g., Senior React Developer"
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                     </div>
                     <div>
@@ -261,14 +274,13 @@ export default function Profile() {
                         value={profileData.bio}
                         onChange={handleChange}
                         rows={3}
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                     </div>
                   </div>
                 ) : (
                   <div>
                     <h2 className="text-2xl font-bold">{profileData.firstName} {profileData.lastName}</h2>
-                    <p className="text-lg text-accent mb-2">{profileData.headline}</p>
+                    <p className="text-lg text-primary mb-2">{profileData.headline}</p>
                     <p className="text-muted-foreground">{profileData.bio}</p>
                   </div>
                 )}
@@ -285,7 +297,6 @@ export default function Profile() {
                     type="email"
                     value={profileData.email}
                     onChange={handleChange}
-                    className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -295,7 +306,6 @@ export default function Profile() {
                     name="phone"
                     value={profileData.phone}
                     onChange={handleChange}
-                    className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -305,7 +315,6 @@ export default function Profile() {
                     name="location"
                     value={profileData.location}
                     onChange={handleChange}
-                    className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -327,10 +336,10 @@ export default function Profile() {
             )}
 
             {isEditing && (
-              <div className="flex gap-3 pt-6 border-t border-border">
+              <div className="flex gap-3 pt-6 border-t border-border mt-6">
                 <Button 
                   onClick={handleSave}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
                 >
                   Save Changes
                 </Button>
@@ -346,14 +355,14 @@ export default function Profile() {
           </Card>
 
           <Tabs defaultValue="skills" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-3 bg-muted text-muted-foreground">
               <TabsTrigger value="skills">Skills</TabsTrigger>
               <TabsTrigger value="experience">Experience</TabsTrigger>
               <TabsTrigger value="education">Education</TabsTrigger>
             </TabsList>
 
             <TabsContent value="skills">
-              <Card className="glass-card p-6">
+              <Card className="border border-border bg-card text-card-foreground p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold">Skills</h3>
                   {isEditing && (
@@ -373,7 +382,6 @@ export default function Profile() {
                       placeholder="Enter skill"
                       value={newSkill}
                       onChange={(e) => setNewSkill(e.target.value)}
-                      className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                     />
                     <Button
                       onClick={() => {
@@ -400,7 +408,7 @@ export default function Profile() {
                       {skill}
                       {isEditing && (
                         <Trash2
-                          className="w-3 h-3 cursor-pointer"
+                          className="w-3 h-3 cursor-pointer text-muted-foreground hover:text-destructive"
                           onClick={() =>
                             setProfileData((prev) => ({
                               ...prev,
@@ -416,7 +424,7 @@ export default function Profile() {
             </TabsContent>
 
             <TabsContent value="experience">
-              <Card className="glass-card p-6 space-y-4">
+              <Card className="border border-border bg-card text-card-foreground p-6 shadow-sm space-y-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold">Experience</h3>
                   {isEditing && (
@@ -431,7 +439,7 @@ export default function Profile() {
                   )}
                 </div>
                 {showExperienceForm && (
-                  <Card className="mb-4 p-4 border border-border bg-background/50">
+                  <Card className="mb-4 p-4 border border-border bg-background">
                     <div className="space-y-3">
                       <Input
                         placeholder="Job Title"
@@ -442,7 +450,6 @@ export default function Profile() {
                             title: e.target.value,
                           })
                         }
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                       <Input
                         placeholder="Company"
@@ -453,7 +460,6 @@ export default function Profile() {
                             company: e.target.value,
                           })
                         }
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                       <Input
                         placeholder="Duration"
@@ -464,7 +470,6 @@ export default function Profile() {
                             duration: e.target.value,
                           })
                         }
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                       <Textarea
                         placeholder="Description"
@@ -475,7 +480,6 @@ export default function Profile() {
                             description: e.target.value,
                           })
                         }
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                       <Button
                         onClick={() => {
@@ -505,7 +509,7 @@ export default function Profile() {
                   </Card>
                 )}
                 {profileData.experience.map((exp) => (
-                  <div key={exp.id} className="p-4 rounded-lg bg-background/50 border border-border">
+                  <div key={exp.id} className="p-4 rounded-lg bg-background border border-border">
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <p className="font-bold">{exp.title}</p>
@@ -513,7 +517,7 @@ export default function Profile() {
                       </div>
                       {isEditing && (
                         <Trash2 
-                          className="w-4 h-4 text-muted-foreground cursor-pointer" 
+                          className="w-4 h-4 text-muted-foreground hover:text-destructive cursor-pointer" 
                           onClick={() =>
                             setProfileData((prev) => ({
                               ...prev,
@@ -531,7 +535,7 @@ export default function Profile() {
             </TabsContent>
 
             <TabsContent value="education">
-              <Card className="glass-card p-6 space-y-4">
+              <Card className="border border-border bg-card text-card-foreground p-6 shadow-sm space-y-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold">Education</h3>
                   {isEditing && (
@@ -547,7 +551,7 @@ export default function Profile() {
                 </div>
 
                 {showEducationForm && (
-                  <Card className="mb-4 p-4 border border-border bg-background/50">
+                  <Card className="mb-4 p-4 border border-border bg-background">
                     <div className="space-y-3">
                       <Input
                         placeholder="School / College"
@@ -558,7 +562,6 @@ export default function Profile() {
                             school: e.target.value,
                           })
                         }
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                       <Input
                         placeholder="Degree"
@@ -569,7 +572,6 @@ export default function Profile() {
                             degree: e.target.value,
                           })
                         }
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                       <Input
                         placeholder="Year"
@@ -580,7 +582,6 @@ export default function Profile() {
                             year: e.target.value,
                           })
                         }
-                        className="border-blue-200 focus:border-blue-600 focus:ring-blue-500"
                       />
                       <Button
                         onClick={() => {
@@ -610,7 +611,7 @@ export default function Profile() {
                 )}
 
                 {profileData.education.map((edu) => (
-                  <div key={edu.id} className="p-4 rounded-lg bg-background/50 border border-border">
+                  <div key={edu.id} className="p-4 rounded-lg bg-background border border-border">
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <p className="font-bold">{edu.degree}</p>
@@ -618,7 +619,7 @@ export default function Profile() {
                       </div>
                       {isEditing && (
                         <Trash2
-                          className="w-4 h-4 text-muted-foreground cursor-pointer"
+                          className="w-4 h-4 text-muted-foreground hover:text-destructive cursor-pointer"
                           onClick={() =>
                             setProfileData((prev) => ({
                               ...prev,
@@ -637,9 +638,9 @@ export default function Profile() {
             </TabsContent>
           </Tabs>
 
-          <Card className="glass-card p-6">
+          <Card className="border border-border bg-card text-card-foreground p-6 shadow-sm">
             <h3 className="text-lg font-bold mb-4">Resume</h3>
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center bg-background/50">
               <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-4" />
               <p className="font-medium mb-2">
                 {profileData.resumeName || "Upload your resume"}
@@ -653,7 +654,7 @@ export default function Profile() {
                     id="resume-upload"
                     type="file"
                     accept=".pdf,.doc,.docx"
-                    className="hidden border-blue-200 focus:border-blue-600 focus:ring-blue-500"
+                    className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
@@ -672,7 +673,7 @@ export default function Profile() {
                   />
                   <Button 
                     asChild
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
                   >
                      <label htmlFor="resume-upload" className="cursor-pointer flex items-center gap-2">
                        <Upload className="w-4 h-4" />
