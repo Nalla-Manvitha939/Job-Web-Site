@@ -20,13 +20,17 @@ import {
   FileText,
   TrendingUp,
   Plus,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function RecruiterDashboard() {
   const [, navigate] = useLocation();
   const { logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const [jobs, setJobs] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
@@ -142,9 +146,9 @@ export default function RecruiterDashboard() {
   }, [applications]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
-        <div className="container py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur shadow-sm">
+        <div className="container py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Recruiter Dashboard</h1>
             <p className="text-sm text-muted-foreground">
@@ -152,7 +156,7 @@ export default function RecruiterDashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Button
               className="btn-premium"
               onClick={() => navigate("/recruiter/post-job")}
@@ -170,6 +174,19 @@ export default function RecruiterDashboard() {
             >
               Logout
             </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full ml-1"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
@@ -179,7 +196,7 @@ export default function RecruiterDashboard() {
           {dashboardCards.map((card, i) => {
             const Icon = card.icon;
             return (
-              <Card key={i} className="glass-card p-6">
+              <Card key={i} className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
                 <div className="flex items-start justify-between mb-4">
                   <Icon className={`w-8 h-8 ${card.color}`} />
                 </div>
@@ -193,7 +210,7 @@ export default function RecruiterDashboard() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <h3 className="font-bold mb-4">Hiring Trend</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={hiringTrend}>
@@ -211,7 +228,7 @@ export default function RecruiterDashboard() {
             </ResponsiveContainer>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <h3 className="font-bold mb-4">Applicant Status</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -235,7 +252,7 @@ export default function RecruiterDashboard() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold">Recent Job Postings</h3>
               <Button
@@ -263,7 +280,7 @@ export default function RecruiterDashboard() {
                   .map((job) => (
                     <div
                       key={job.id}
-                      className="flex items-start justify-between p-3 rounded-lg bg-background/50 hover:bg-background transition-colors"
+                      className="flex items-start justify-between p-3 rounded-lg bg-background/50 hover:bg-background transition-colors border border-transparent hover:border-border"
                     >
                       <div className="flex-1">
                         <p className="font-medium text-sm">{job.title}</p>
@@ -285,7 +302,7 @@ export default function RecruiterDashboard() {
             </div>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold">Recent Applicants</h3>
               <Button
@@ -313,7 +330,7 @@ export default function RecruiterDashboard() {
                   .map((applicant) => (
                     <div
                       key={applicant.id}
-                      className="flex items-start justify-between p-3 rounded-lg bg-background/50 hover:bg-background transition-colors cursor-pointer"
+                      className="flex items-start justify-between p-3 rounded-lg bg-background/50 hover:bg-background transition-colors cursor-pointer border border-transparent hover:border-border"
                     >
                       <div className="flex-1">
                         <p className="font-medium text-sm">
@@ -341,26 +358,26 @@ export default function RecruiterDashboard() {
           </Card>
         </div>
 
-        <Card className="glass-card p-6">
+        <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
           <h3 className="font-bold mb-4">Quick Actions</h3>
           <div className="grid md:grid-cols-3 gap-4">
             <Button
               variant="outline"
-              className="h-12"
+              className="h-12 border-border"
               onClick={() => navigate("/recruiter/post-job")}
             >
               Post New Job
             </Button>
             <Button
               variant="outline"
-              className="h-12"
+              className="h-12 border-border"
               onClick={() => navigate("/recruiter/applicants")}
             >
               Review Applicants
             </Button>
             <Button
               variant="outline"
-              className="h-12"
+              className="h-12 border-border"
               onClick={() => navigate("/recruiter/company-profile")}
             >
               Edit Company Profile
