@@ -3,14 +3,16 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Sun, Moon } from "lucide-react";
 import { useLocation } from "wouter";
 import { useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Register() {
   const [, navigate] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -49,10 +51,7 @@ export default function Register() {
     }
 
     try {
-      // Uses VITE_API_URL if defined, otherwise falls back directly to your Render backend
-      const API_URL = import.meta.env.VITE_API_URL || "https://job-web-site-2qhl.onrender.com";
-      
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch("http://127.0.0.1:8000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,9 +82,9 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-300">
       <div className="border-b border-border">
-        <div className="container py-4">
+        <div className="container py-4 flex items-center justify-between">
           <button
             onClick={() => navigate("/")}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -93,6 +92,19 @@ export default function Register() {
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
