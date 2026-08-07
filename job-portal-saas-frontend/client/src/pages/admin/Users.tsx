@@ -11,12 +11,15 @@ import {
   Pencil,
   Trash2,
   Ban,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface User {
   id: number | string;
@@ -29,6 +32,7 @@ interface User {
 
 export default function UsersPage() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
@@ -131,7 +135,7 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
         <div className="container py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -149,6 +153,19 @@ export default function UsersPage() {
               </p>
             </div>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
@@ -198,7 +215,7 @@ export default function UsersPage() {
             </div>
 
             <select
-              className="border rounded-lg px-4 py-2 bg-background"
+              className="border rounded-lg px-4 py-2 bg-background text-foreground"
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
             >
