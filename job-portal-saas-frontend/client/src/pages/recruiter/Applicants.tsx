@@ -12,12 +12,15 @@ import {
   Download,
   Calendar,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Applicant {
   id: number;
@@ -52,6 +55,7 @@ interface Applicant {
 
 export default function Applicants() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const [applications, setApplications] = useState<Applicant[]>([]);
   const [search, setSearch] = useState("");
@@ -112,7 +116,6 @@ export default function Applicants() {
     }
   };
 
-  
   const handleDownloadResume = (resumeUrl: string, fileName: string = "Resume.pdf") => {
     if (!resumeUrl) return;
 
@@ -188,9 +191,8 @@ export default function Applicants() {
   const rejectedCount = applications.filter((a) => a.status === "Rejected").length;
 
   return (
-    <div className="min-h-screen bg-background">
-      
-      <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <div className="border-b border-border sticky top-0 z-45 bg-background/95 backdrop-blur shadow-sm">
         <div className="container py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
@@ -207,51 +209,61 @@ export default function Applicants() {
               </p>
             </div>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
       <div className="container py-8 space-y-8">
-        
         <div className="grid md:grid-cols-4 gap-6">
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <Users className="w-8 h-8 text-blue-600 mb-3" />
             <p className="text-sm text-muted-foreground">Total Applicants</p>
             <h2 className="text-3xl font-bold">{totalCount}</h2>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <Clock className="w-8 h-8 text-yellow-500 mb-3" />
             <p className="text-sm text-muted-foreground">Pending / Reviewed</p>
             <h2 className="text-3xl font-bold">{pendingCount}</h2>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <UserCheck className="w-8 h-8 text-green-600 mb-3" />
             <p className="text-sm text-muted-foreground">Shortlisted / Interview</p>
             <h2 className="text-3xl font-bold">{shortlistedCount}</h2>
           </Card>
 
-          <Card className="glass-card p-6">
+          <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
             <UserX className="w-8 h-8 text-red-600 mb-3" />
             <p className="text-sm text-muted-foreground">Rejected</p>
             <h2 className="text-3xl font-bold">{rejectedCount}</h2>
           </Card>
         </div>
 
-        
-        <Card className="glass-card p-6">
+        <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
               <Input
-                className="pl-10"
+                className="pl-10 bg-background text-foreground border-border"
                 placeholder="Search applicants by name or position..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <select
-              className="border rounded-lg px-4 py-2 bg-background text-sm"
+              className="border border-border rounded-lg px-4 py-2 bg-background text-foreground text-sm"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -266,11 +278,10 @@ export default function Applicants() {
           </div>
         </Card>
 
-        
-        <Card className="glass-card overflow-hidden">
+        <Card className="glass-card overflow-hidden bg-card text-card-foreground border-border shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b bg-muted/40">
+              <thead className="border-b border-border bg-muted/40">
                 <tr>
                   <th className="text-left p-4 font-semibold">Candidate</th>
                   <th className="text-left p-4 font-semibold">Applied For</th>
@@ -295,9 +306,8 @@ export default function Applicants() {
                   filteredApplicants.map((applicant) => (
                     <tr
                       key={applicant.id}
-                      className="border-b hover:bg-muted/30 transition-colors"
+                      className="border-b border-border hover:bg-muted/30 transition-colors"
                     >
-                      
                       <td className="p-4">
                         <div>
                           <p className="font-semibold">{applicant.applicantName || "Anonymous Candidate"}</p>
@@ -308,19 +318,16 @@ export default function Applicants() {
                         </div>
                       </td>
 
-                      
                       <td className="p-4 font-medium">
                         {applicant.jobTitle || "Position"}
                       </td>
 
-                      
                       <td className="p-4 text-sm text-muted-foreground">
                         {applicant.appliedAt
                           ? new Date(applicant.appliedAt).toLocaleDateString()
                           : "Recently"}
                       </td>
 
-                      
                       <td className="p-4">
                         <Badge
                           className={
@@ -341,10 +348,9 @@ export default function Applicants() {
                         </Badge>
                       </td>
 
-                      
                       <td className="p-4">
                         <select
-                          className="border rounded px-2 py-1 bg-background text-xs"
+                          className="border border-border rounded px-2 py-1 bg-background text-foreground text-xs"
                           value={applicant.status}
                           onChange={(e) =>
                             handleStatusChange(
@@ -362,7 +368,6 @@ export default function Applicants() {
                         </select>
                       </td>
 
-                      
                       <td className="p-4">
                         {applicant.resume ? (
                           <Button
@@ -374,7 +379,7 @@ export default function Applicants() {
                                 applicant.applicantName || "Applicant"
                               )
                             }
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 border-border"
                           >
                             View Resume
                           </Button>
@@ -385,13 +390,12 @@ export default function Applicants() {
                         )}
                       </td>
 
-                      
                       <td className="p-4">
                         <div className="flex justify-end gap-2">
                           <Button
                             size="icon"
                             variant={applicant.status === "Shortlisted" ? "default" : "outline"}
-                            className={applicant.status === "Shortlisted" ? "bg-purple-600 hover:bg-purple-700" : ""}
+                            className={applicant.status === "Shortlisted" ? "bg-purple-600 hover:bg-purple-700 text-white" : "border-border"}
                             title={
                               applicant.status === "Shortlisted" || applicant.status === "Interview"
                                 ? "Schedule Interview"
@@ -409,6 +413,7 @@ export default function Applicants() {
                                 size="icon"
                                 variant="outline"
                                 title="Email Candidate"
+                                className="border-border"
                               >
                                 <Mail className="w-4 h-4" />
                               </Button>
@@ -421,6 +426,7 @@ export default function Applicants() {
                                 size="icon"
                                 variant="outline"
                                 title="Call Candidate"
+                                className="border-border"
                               >
                                 <Phone className="w-4 h-4" />
                               </Button>
@@ -431,6 +437,7 @@ export default function Applicants() {
                             size="icon"
                             variant="outline"
                             title="Download Resume"
+                            className="border-border"
                             onClick={() =>
                               handleDownloadResume(
                                 applicant.resume,
@@ -450,8 +457,7 @@ export default function Applicants() {
           </div>
         </Card>
 
-        
-        <Card className="glass-card p-6">
+        <Card className="glass-card p-6 bg-card text-card-foreground border-border shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Recruitment Summary</h2>
@@ -469,11 +475,9 @@ export default function Applicants() {
         </Card>
       </div>
 
-      
       {previewResumeUrl && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-background border border-border rounded-xl w-full max-w-5xl h-[95vh] flex flex-col shadow-2xl">
-            
+          <div className="bg-background text-foreground border border-border rounded-xl w-full max-w-5xl h-[95vh] flex flex-col shadow-2xl">
             <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-border bg-background">
               <h3 className="text-lg font-semibold">
                 Resume Preview — {previewCandidateName}
@@ -488,7 +492,6 @@ export default function Applicants() {
               </Button>
             </div>
 
-            
             <div className="flex-1 overflow-auto bg-muted/10">
               <iframe
                 src={previewResumeUrl}
