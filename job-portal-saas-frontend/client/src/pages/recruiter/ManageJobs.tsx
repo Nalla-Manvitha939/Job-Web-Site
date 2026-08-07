@@ -10,12 +10,15 @@ import {
   Pencil,
   Trash2,
   Calendar,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Job {
   id: number;
@@ -39,6 +42,7 @@ interface Job {
 
 export default function ManageJobs() {
   const [, navigate] = useLocation();
+  const { theme, toggleTheme } = useTheme();
   const [jobsData, setJobsData] = useState<Job[]>([]);
 
   const [search, setSearch] = useState("");
@@ -62,7 +66,6 @@ export default function ManageJobs() {
     setJobsData(recruiterJobs);
   }, []);
 
-  
   const handleDeleteJob = (jobId: number) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this job?"
@@ -107,8 +110,7 @@ export default function ManageJobs() {
   }, [jobsData, search, status]);
 
   return (
-    <div className="min-h-screen bg-background">
-      
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="border-b border-border sticky top-0 z-40 bg-background/95 backdrop-blur">
         <div className="container py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -128,18 +130,32 @@ export default function ManageJobs() {
             </div>
           </div>
 
-          <Button
-            className="btn-premium"
-            onClick={() => navigate("/recruiter/post-job")}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Post Job
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
+
+            <Button
+              className="btn-premium"
+              onClick={() => navigate("/recruiter/post-job")}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Post Job
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="container py-8 space-y-8">
-        
         <div className="grid md:grid-cols-4 gap-6">
           <Card className="glass-card p-6">
             <Briefcase className="w-8 h-8 text-blue-600 mb-3" />
@@ -174,7 +190,6 @@ export default function ManageJobs() {
           </Card>
         </div>
 
-        
         <Card className="glass-card p-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
@@ -188,7 +203,7 @@ export default function ManageJobs() {
             </div>
 
             <select
-              className="border rounded-lg px-4 py-2 bg-background"
+              className="border border-border rounded-lg px-4 py-2 bg-background text-foreground"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
@@ -200,11 +215,10 @@ export default function ManageJobs() {
           </div>
         </Card>
 
-        
         <Card className="glass-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b bg-muted/40">
+              <thead className="border-b border-border bg-muted/40">
                 <tr>
                   <th className="text-left p-4 font-semibold">Job</th>
                   <th className="text-left p-4 font-semibold">Location</th>
@@ -230,7 +244,7 @@ export default function ManageJobs() {
                   jobs.map((job) => (
                     <tr
                       key={job.id}
-                      className="border-b hover:bg-muted/30 transition-colors"
+                      className="border-b border-border hover:bg-muted/30 transition-colors"
                     >
                       <td className="p-4">
                         <div>
@@ -262,7 +276,6 @@ export default function ManageJobs() {
 
                       <td className="p-4">
                         <div className="flex justify-end gap-2">
-                          
                           <Button
                             size="icon"
                             variant="outline"
@@ -298,7 +311,6 @@ export default function ManageJobs() {
           </div>
         </Card>
 
-        
         <Card className="glass-card p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
