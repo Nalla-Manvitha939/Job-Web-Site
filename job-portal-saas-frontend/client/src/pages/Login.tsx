@@ -3,10 +3,11 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Sun, Moon } from "lucide-react";
 import { useLocation } from "wouter";
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Login() {
   const [, navigate] = useLocation();
@@ -14,13 +15,10 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const API_URL =
-      import.meta.env.VITE_API_URL ||
-      "https://job-web-site-2qhl.onrender.com";
 
     if (
       email.trim().toLowerCase() === "recruiter@jobportal.com" &&
@@ -59,7 +57,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch("http://localhost:8000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,12 +102,8 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async (credential: string) => {
-    const API_URL =
-      import.meta.env.VITE_API_URL ||
-      "https://job-web-site-2qhl.onrender.com";
-
     try {
-      const response = await fetch(`${API_URL}/auth/google`, {
+      const response = await fetch("http://localhost:8000/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -150,9 +144,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-300">
+      {/* Navigation Header with Theme Toggle */}
       <div className="border-b border-border">
-        <div className="container py-4">
+        <div className="container py-4 flex items-center justify-between">
           <button
             onClick={() => navigate("/")}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -160,9 +155,23 @@ export default function Login() {
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="flex-1 flex items-center justify-center py-12">
         <div className="w-full max-w-md px-4">
           <Card className="glass-card p-8 space-y-6">
